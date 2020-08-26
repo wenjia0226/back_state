@@ -1,31 +1,47 @@
 <template>
    <el-container class="home-container">
-     <el-aside width="200px">
-     	 <!-- 菜单区域 -->
-     	<el-menu
-     	background-color="#333744"
-     	text-color="#fff"
-     	active-text-color="#409eff"
-     	 :default-active="activeIndex"
-     	router
-     	:unique-opened= true>
-     	<!-- 一级菜单 -->
-     	<el-submenu :index="'/' +item.id" v-for="item in menuList" :key="item.id">
-     		<!-- 一级菜单模板 -->
-     		<template slot="title">
-     	   <!-- <i :class="el-icon-my-export"></i> -->
-     		<span>{{item.authName}}</span>
-     		</template>
-     		<!-- 二级菜单 -->
-     		<el-menu-item :index="'/' + subItem.path" v-for="subItem in item.children" :key="subItem.id"
-         @click="saveNavState('/' + subItem.path)">
-     			<template slot="title">
-     				<span>{{subItem.authName}}</span>
-     			</template>
-     		</el-menu-item>
-     	</el-submenu>
-     	</el-menu>
-     </el-aside>
+      <el-aside>
+         <el-menu
+                 :default-active="this.$route.path"
+                 class="el-menu-vertical-demo"
+                 background-color="#333744"
+                text-color="#fff"
+                active-text-color="#409eff"
+                style="width: 100%; width: 200px"
+                 router
+               >
+                 <h3>后台系统后台</h3>
+
+                 <el-menu-item index="/first">
+                   <i class="el-icon-star-on"></i>
+                   <span slot="title">首页</span>
+                 </el-menu-item>
+                 <el-submenu index="/studentsetting">
+                   <template slot="title">
+                     <i class="el-icon-s-custom"></i>
+                     <span>学生管理</span>
+                   </template>
+                   <el-menu-item-group>
+                     <el-menu-item index="/studentsetting">
+                       <i class="el-icon-star-on"></i>
+                       <span slot="title">学生管理</span>
+                     </el-menu-item>
+                     <el-menu-item index="/classsetting">
+                       <i class="el-icon-star-on"></i>
+                       <span slot="title">班级管理</span>
+                    </el-menu-item>
+                   </el-menu-item-group>
+                 </el-submenu>
+                 <el-menu-item index="/recordsetting">
+                   <i class="el-icon-document"></i>
+                   <span slot="title">档案管理</span>
+                 </el-menu-item>
+                 <el-menu-item index="/analysis">
+                   <i class="el-icon-medal"></i>
+                   <span slot="title">数据分析</span>
+                 </el-menu-item>
+               </el-menu>
+      </el-aside>
       <!-- 右侧主体区 -->
       <el-main>
         <router-view></router-view>
