@@ -27,7 +27,7 @@
      	</el-menu>
      </el-aside>
       <!-- 右侧主体区 -->
-      <el-main style="padding: 0">
+      <el-main>
         <router-view></router-view>
       </el-main>
    </el-container>
@@ -46,9 +46,6 @@
       }
     },
     methods: {
-      select(e) {
-        console.log(e)
-      },
       getMenuList() {
         //获取所都菜单
             let listparam = new FormData();
@@ -60,7 +57,7 @@
             .catch((err) => { console.log(err)})
       },
       handleGetMenuListSucc (res){
-        console.log(res)
+        // console.log(res)
         if(res.data.status == 200) {
            this.menuList = res.data.data;
            let menuList = res.data.data;
