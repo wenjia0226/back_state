@@ -30,70 +30,70 @@
       drawLine(yData) {
         var myChart = echarts.init(this.$refs.badTotal);
           this.option ={
-              tooltip: {
-                          trigger: "axis",
-                          formatter: function(params) {
-                            return (
-                              params[0].name +
-                              "<br/>" +
-                              params[0].seriesName +
-                              "：" +
-                              params[0].data  +
-                              "<br/>" +
-                              params[1].seriesName +
-                              "：" +
-                              params[1].data
-                            );
-                          }
-                        },
-                        // color: ['#76aafa', '#6cc280'],
-                        legend:{
-                            data:['本校', '全国'],
-                            selectedMode:false
-                        },
-                        //x轴
-                        xAxis:{
-                          boundaryGap: false,
-                          data: ["一年级", "二年级", "三年级", "四年级", "五年级", '六年级']
-                        },
+            tooltip: {
+              trigger: "axis",
+              formatter: function(params) {
+                //return (
+                  // params[0].name +
+                  // "<br/>" +
+                  // params[0].seriesName +
+                  // "：" +
+                  // params[0].data  +
+                  // "<br/>" +
+                  // params[1].seriesName +
+                  // "：" +
+                  // params[1].data
+                //);
+              }
+            },
+            // color: ['#76aafa', '#6cc280'],
+            legend:{
+                data:['本校', '全国'],
+                selectedMode:false
+            },
+            //x轴
+            xAxis:{
+              boundaryGap: false,
+              data: ["一年级", "二年级", "三年级", "四年级", "五年级", '六年级']
+            },
 
-                        //y轴没有显式设置，根据值自动生成y轴
-                        yAxis:{
-                          min: 0.1,
-                          max: 2.0,
-                          interval: 0.1,
-                          right: 10,
-                          axisLine:{
-                              show:false,
-                              fontWeight: 'bolder'
-                          },
-                          axisTick:{
-                              show:false
-                          },
-                          splitLine: {
-                            show: true,
-                            lineStyle: {
-                                type: 'dashed',
-                                color:'#113d5e'
-                            }
-                        },
-                        },
-                        //数据-data是最终要显示的数据
-                        series:[{
-                            name:'本校',
-                            type:'line',
-                            color: '#5e86d1',
-                            smooth: true,
-                            data: yData
-                        },
-                        {
-                            name:'全国',
-                            type:'line',
-                            color: '#5bbf5d',
-                            smooth:true,
-                            data:[1.0,0.8, 0.6, 0.5, 0.5, 0.4]
-                        }
-                        ]
+            //y轴没有显式设置，根据值自动生成y轴
+            yAxis:{
+              min: 0.1,
+              max: 2.0,
+              interval: 0.1,
+              right: 10,
+              axisLine:{
+                  show:false,
+                  fontWeight: 'bolder'
+              },
+              axisTick:{
+                  show:false
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                    type: 'dashed',
+                    color:'#113d5e'
+                }
+            },
+            },
+            //数据-data是最终要显示的数据
+            series:[{
+                name:'本校',
+                type:'line',
+                color: '#5e86d1',
+                smooth: true,
+                data: yData
+            },
+            {
+                name:'全国',
+                type:'line',
+                color: '#5bbf5d',
+                smooth:true,
+                data:[1.0,0.8, 0.6, 0.5, 0.5, 0.4]
+            }
+            ]
           }
           myChart.setOption(this.option)
       },

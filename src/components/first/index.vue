@@ -2,6 +2,7 @@
   <div>
     <title-header :common="common" ></title-header>
     <first-base ></first-base>
+    <top5></top5>
     <bad-total></bad-total> <!-- 不良率统计 -->
     <level-record></level-record>   <!-- 视力分级 -->
     <trend></trend>
@@ -10,6 +11,7 @@
 <script>
   import titleHeader from '../../common/header'
   import firstBase   from './base'
+  import top5 from './top5'
   import badTotal from './badTotal'
   import levelRecord from './levelRecord'
   import trend from './trend'
@@ -20,7 +22,8 @@
       firstBase,
       badTotal,
       levelRecord,
-      trend
+      trend,
+      top5
     },
     data() {
       return {

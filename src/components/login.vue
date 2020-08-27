@@ -38,8 +38,11 @@
          url: '/lightspace/school/login'
        }).then((res) => {
          if(res.data.status == 200) {
-           window.sessionStorage.setItem('username', res.data.data);
-            this.$router.push('/home');
+           console.log(res)
+           window.sessionStorage.setItem('userName', res.data.data.userName);
+           window.sessionStorage.setItem('schoolName', res.data.data.schoolName);
+           window.sessionStorage.setItem('schoolId', res.data.data.schoolId);
+            this.$router.push('/first');
             this.$message.success('登录成功')
          } else {
            this.$message.error(res.data.msg)

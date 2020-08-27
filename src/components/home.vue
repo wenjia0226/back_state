@@ -1,13 +1,13 @@
 <template>
    <el-container class="home-container">
-      <el-aside>
+      <el-aside style="width: 200px;">
          <el-menu
                  :default-active="this.$route.path"
                  class="el-menu-vertical-demo"
                  background-color="#333744"
                 text-color="#fff"
                 active-text-color="#409eff"
-                style="width: 100%; width: 200px"
+                style="height:100%"
                  router
                >
                  <h3>后台系统后台</h3>
@@ -73,7 +73,7 @@
             .catch((err) => { console.log(err)})
       },
       handleGetMenuListSucc (res){
-        // console.log(res)
+         // console.log(res)
         if(res.data.status == 200) {
            this.menuList = res.data.data;
            let menuList = res.data.data;

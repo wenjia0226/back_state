@@ -20,7 +20,7 @@ export default new Router({
          {path: '/first', component: First },
          {path: '/studentsetting', component: Studentsetting},
          {path: '/classsetting', component: Classsetting},
-         {path: '/recordsetting', component: Recordsetting},
+         {path: '/recordsetting', component: Recordsetting}, 
          {path: '/analysis', component: Analysis}
        ]
      }

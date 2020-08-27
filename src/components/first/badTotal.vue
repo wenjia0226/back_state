@@ -23,9 +23,6 @@
         yData: []
       }
     },
-    mounted() {
-      this.drawLine()
-    },
     methods: {
       drawLine(yData) {
         var myChart = echarts.init(this.$refs.badTotal);
@@ -38,8 +35,9 @@
                         }
                     },
                    legend: {
-                                data:['本校']
-                            },
+                            data:['本校'],
+                            selectedMode:false
+                    },
                     // x轴
                     xAxis: {
                         data: ["一年级", "二年级", "三年级", "四年级", "五年级", '六年级']

@@ -26,13 +26,14 @@
       }
     },
     created() {
-      this.username = window.sessionStorage.getItem('username')
+      this.username = window.sessionStorage.getItem('userName')
     }
   }
 </script>
 
 <style lang="stylus" scoped>
     .header_wrap
-      font-size: 20px;
+      font-size: 16px;
+      font-weight: bold
 
 </style>
