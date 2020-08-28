@@ -8,12 +8,14 @@ import echarts from 'echarts'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/style/base/reset.css'
 import './assets/style/base/border.css'
+import store from './store/'
 Vue.use(ElementUI);
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
+  store,
   router,
   components: { App },
   template: '<App/>'

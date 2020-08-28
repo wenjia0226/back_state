@@ -107,7 +107,7 @@
          })
       },
       handlegetBadTotalSucc(res) {
-        console.log(res)
+       // console.log(res)
         if(res.data.status == 200) {
           this.yData = res.data.data;
           this.drawLine(this.yData)

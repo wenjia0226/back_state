@@ -3,8 +3,8 @@
     <title-header :common="common" ></title-header>
     <el-card>
       <current-school></current-school>
-      <search></search>
-      <card></card>
+      <search @recordList="handleChange" ref ="search" v-if="show"></search>
+      <card ref="cardmenu" @showSearch="handleShow" ></card>
     </el-card>
   </div>
 </template>
@@ -23,8 +23,17 @@
       },
     data() {
       return {
-         common: '档案管理'
+         common: '档案管理',
+         show: true
       }
+    },
+    methods: {
+      handleChange(classId, name) {
+         this.$refs.cardmenu.getInfo(classId, name)
+      },
+	  handleShow(val) {
+		  this.show = val;
+	  }
     }
   }
 </script>

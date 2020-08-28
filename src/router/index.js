@@ -7,6 +7,7 @@ import Studentsetting from '@/components/studentsetting/index.vue'
 import Classsetting from '@/components/classsetting/index.vue'
 import Recordsetting from '@/components/recordsetting/index.vue'
 import First from '@/components/first/index.vue'
+import History from '@/components/first/history.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -18,10 +19,12 @@ export default new Router({
        component: Home,
        children: [
          {path: '/first', component: First },
+         {path: '/history', component: History},
          {path: '/studentsetting', component: Studentsetting},
          {path: '/classsetting', component: Classsetting},
-         {path: '/recordsetting', component: Recordsetting}, 
-         {path: '/analysis', component: Analysis}
+         {path: '/recordsetting', component: Recordsetting},
+         {path: '/analysis', component: Analysis},
+
        ]
      }
   ]

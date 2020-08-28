@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-row class="searchBox" :gutter="20">
+    <el-row class="searchBox" :gutter="20" v-if="show">
       <el-col :span="2"><div class="name">姓名</div></el-col>
       <el-col :span="4">
         <el-input v-model="inputName" @input ="handleInputName" placeholder="姓名"></el-input>
       </el-col>
       <el-col :span="2"> <div class="name">班级选择</div></el-col>
       <el-col :span="4">
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
             <el-option
               v-for="item in options"
               :key="item.id"
@@ -17,16 +17,17 @@
           </el-select>
       </el-col>
      <el-col :span="2">
-       <el-button type="primary">查询</el-button>
+       <el-button type="primary" @click="searchStudent">查询</el-button>
      </el-col>
      <el-col :span="2">
-       <el-button type="primary">重置</el-button>
+       <el-button type="primary" @click="handleReset">重置</el-button>
      </el-col>
     </el-row>
   </div>
 </template>
 <script>
   import axios from 'axios'
+
   export default{
     created() {
       this.getOptions()
@@ -35,12 +36,23 @@
       return {
         options: [],
         value: '',
-        inputName: ''
+        inputName: '',
+        classId: 0,
+        show: true
       }
     },
     methods: {
+      handleReset() {
+        this.inputName = '';
+        this.classId  =  0;
+        this.value = '';
+        this.$emit('recordList', this.classId, this.inputName)
+      },
       handleInputName(e) {
         this.inputName = e
+      },
+      handleClassChange(val) {
+        this.classId = val;
       },
       getOptions() {
         let param = new FormData();
@@ -56,7 +68,11 @@
         if(res.data.status == 200) {
           this.options = res.data.data
         }
-      }
+      },
+      searchStudent() {
+          this.$emit('recordList', this.classId, this.inputName)
+      },
+
     }
   }
 </script>

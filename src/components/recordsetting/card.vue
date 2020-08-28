@@ -1,8 +1,10 @@
 <template>
   <div>
+
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="裸眼档案" name="luo"></el-tab-pane>
         <el-tab-pane label="戴镜视力" name="wear"></el-tab-pane>
+        <el-tab-pane label="基础信息" name="base"></el-tab-pane>
       </el-tabs>
       <!-- 裸眼列表 -->
     <el-table  :header-cell-style="{background:'#eef1f6',color:'#606266'}" :data="this.content"
@@ -27,9 +29,9 @@
         :page-size ="this.size"
         :total="this.totalElements">
       </el-pagination>
-     <!-- 戴镜列表 -->
+   <!-- 戴镜列表 -->
     <el-table :data="this.content" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
-       border v-show="this.activeName == 'wear'&& !this.showWearHistory"  stripe style="width: 100%">
+      border v-show="this.activeName == 'wear'&& !this.showWearHistory"  stripe style="width: 100%">
           <el-table-column label="学校" prop="schoolName"></el-table-column>
           <el-table-column label="班级" prop="className"></el-table-column>
          <el-table-column label="学生姓名" >
@@ -50,16 +52,36 @@
        :page-size ="this.size"
        :total="this.totalElements">
      </el-pagination>
-      <!-- 裸眼历史记录 -->
+   <!-- 基础信息 -->
+     <el-table :data="this.content" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+       border v-show="this.activeName == 'base' "  stripe style="width: 100%">
+          <el-table-column label="学校" prop="schoolName"></el-table-column>
+          <el-table-column label="班级" prop="classesName"></el-table-column>
+          <el-table-column label="姓名" prop="name"></el-table-column>
+           <el-table-column label="身高" prop="height"></el-table-column>
+           <el-table-column label="坐高" prop="sittingHeight"></el-table-column>
+           <el-table-column label="体重" prop="weight"></el-table-column>
+     </el-table>
+     <el-pagination
+        background
+        v-show="this.activeName == 'base'"
+        :current-page="this.number"
+        @current-change="handleCurrentChange"
+        layout="prev, pager, next"
+        :page-size ="this.size"
+        :total="this.totalElements">
+      </el-pagination>
+   <!-- 裸眼历史记录 -->
     <el-table :data="this.stucontent" v-show="this.showHistory">
+      <el-table-column label="班级" prop="className"></el-table-column>
       <el-table-column label="学生姓名" prop="studentName"></el-table-column>
       <el-table-column label="检测时间" prop="lastTime"></el-table-column>
       <el-table-column label="右眼裸眼视力" prop="visionRight"></el-table-column>
       <el-table-column label="左眼裸眼视力" prop="visionLeft"></el-table-column>
      <el-table-column label="操作">
-         <template slot-scope="scope">
-             <el-button type="primary" size="middle" icon="el-icon-edit"   ></el-button>
-         </template>
+       <template slot-scope="scope">
+           <el-button type="warning" size="middle" icon="el-icon-delete" @click="hanldeRemoveRecod('luo',scope.row)"  ></el-button>
+       </template>
      </el-table-column>
     </el-table>
     <el-pagination
@@ -73,13 +95,14 @@
     </el-pagination>
     <!-- 戴镜历史记录 -->
     <el-table :data="this.wearstucontent" v-show="this.showWearHistory">
+      <el-table-column label="班级" prop="className"></el-table-column>
       <el-table-column label="学生姓名" prop="studentName"></el-table-column>
       <el-table-column label="检测时间" prop="lastTime"></el-table-column>
       <el-table-column label="右眼戴镜视力" prop="visionRight"></el-table-column>
       <el-table-column label="左眼戴镜视力" prop="visionLeft"></el-table-column>
      <el-table-column label="操作">
          <template slot-scope="scope">
-             <el-button type="primary" size="middle" icon="el-icon-edit"   ></el-button>
+             <el-button type="warning" size="middle" icon="el-icon-delete" @click="hanldeRemoveRecod('wear',scope.row)"  ></el-button>
          </template>
      </el-table-column>
     </el-table>
@@ -99,10 +122,13 @@
   export default {
     name: 'card',
     created() {
-      this.getDataList();
+      this.getInfo('', '');
     },
      data() {
       return {
+        type: '',
+        id: '',
+        name: '',
         url: '/lightspace/school/screeningList',
         activeName: 'luo',
         content: [],
@@ -119,6 +145,12 @@
         stusize: 5,
         stutotal:0,
         stutotalElements: 0,
+        basepageSize: 10,
+        basesize: 5,
+        basetotal:0,
+        basetotalElements: 0,
+        basenumber: 1,
+        basepage: 1,
         stunumber: 1,
         stupage: 1,
         showHistory: false,
@@ -130,41 +162,72 @@
         wearstutotalElements: 0,
         wearstunumber: 1,
         wearstupage: 1,
+        delType: '',
+        showSearch: true, // 展示搜索框
       }
     },
     methods: {
+      //切换裸眼档案
     handleClick(tab, event) {
         this.activeName = tab.name;
         this.showHistory = false;
         this.showWearHistory = false;
+
         this.stupage = 1;
         this.wearstupage = 1;
         if(tab.name == 'luo') {
           this.url = '/lightspace/school/screeningList'
         }else if(tab.name == 'wear') {
           this.url =  '/lightspace/school/screeningWearList'
+        }else if(tab.name == 'base') {
+          this.url = '/lightspace/school/getStudent'
         }
         this.page = 1;
         this.getDataList();
+        this.$emit('showSearch', true)
     },
+     //分页
     handleCurrentChange(val) {
       this.page = val;
       this.getDataList();
     },
+    //历史裸眼分页
     handleHistoryCurrentChange(val) {
       this.stupage = val;
       this.getSudentHistory();
     },
+    //历史戴镜分页
     handleWearHistoryCurrentChange(val) {
       this.wearstupage = val;
       this.getWearSudentHistory();
     },
+    //进入判断类型
+    getInfo(classId, name) {
+      if(classId && !name) {  // 如果只有班级
+        this.type = 'class';
+        this.id = classId;
+      }else if(classId && name) { // 如果班级和姓名都存在
+        this.type ="student";
+        this.name = name;
+        this.id = '';
+      }else if (!this.classId && name) {
+        this.type ="student";
+        this.name = name;
+        this.id = ''
+      } else {   //如果都不存在
+        this.type = '',
+        this.id = ''
+      }
+      this.page = 1;
+      this.getDataList()
+    },
+    // 获取列表
     getDataList() {
       let param = new FormData();
-        param.append('type', '');
-        param.append('id','');
-        param.append('token', this.token);
-        param.append('page', this.page)
+        param.append('type', this.type);
+        param.append('id', this.id);
+        param.append('page', this.page);
+        param.append('name', this.name);
         axios({
           method: 'post',
           data: param,
@@ -183,10 +246,15 @@
            item.lastTime = item.date + '\xa0\xa0' + item.time
          })
        }
+     }else {
+       this.$message.error(res.data.msg)
+       this.content = [];
      }
     },
     //点击进入学生历史
     showStudentInfo(type, studentId) {
+       this.showSearch = false;
+      this.$emit('showSearch', this.showSearch)
       if(type == 'luo') {
         this.showHistory = true;
         this.studentId  = studentId;
@@ -219,6 +287,9 @@
              item.lastTime = item.date + '\xa0\xa0' + item.time
            })
          }
+     }else if(res.data.status == 10211) {
+       this.wearstucontent = [];
+       this.$message.error(res.data.msg)
      }
    },
     getSudentHistory() {
@@ -244,7 +315,49 @@
             item.lastTime = item.date + '\xa0\xa0' + item.time
           })
         }
+      }else {
+        this.$message.error(res.data.msg);
+        this.stucontent = [];
       }
+    },
+    async  hanldeRemoveRecod(type,row) {
+      let deleurl = "";
+      this.delType = type;
+      let id = row.id;
+      if(type == 'luo') {
+        deleurl = '/lightspace/school/deleteScreening'
+      }else if(type == 'wear') {
+        deleurl = '/lightspace/school/deleteScreeningWear'
+      }
+       const confirmResult = await this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
+           confirmButtonText: '确定',
+           cancelButtonText: '取消',
+           type: 'warning'
+       }).catch(err => err)
+       if(confirmResult !== 'confirm') {
+           return this.$message.info('已经取消删除')
+       }
+           let param = new FormData();
+           param.append('id', id);
+           axios({
+               method: 'post',
+               url: deleurl,
+               data: param
+           }).then(this.handleDeleteRecordSucc.bind(this)).catch((err) => {console.log(err)})
+    },
+    handleDeleteRecordSucc(res) {
+     console.log(res)
+      if(res.data.status == 200) {
+         this.$message.success('删除成功')
+         if(this.delType == 'luo') {
+           this.getSudentHistory()
+         }else if(this.delType == 'wear') {
+           this.getWearSudentHistory()
+         }
+       }else {
+         this.$message.error(res.data.msg);
+         this.$router.push('/login');
+       }
     }
   }
 }

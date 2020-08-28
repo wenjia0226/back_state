@@ -52,9 +52,9 @@
 <script>
   import axios from 'axios'
   export default {
-    created() {
-       this.getMenuList();
-    },
+    // created() {
+    //    this.getMenuList();
+    // },
     data() {
       return {
         menuList: [],
