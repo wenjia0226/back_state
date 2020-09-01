@@ -1,4 +1,8 @@
 export default {
   name: '',
-  classId: ''
+  school: '',
+  semester: 1,
+  year: '2020 - 2021',
+  classId: '',
+  grade: 0
 }

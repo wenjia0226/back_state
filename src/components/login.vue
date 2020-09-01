@@ -42,6 +42,8 @@
            window.sessionStorage.setItem('userName', res.data.data.userName);
            window.sessionStorage.setItem('schoolName', res.data.data.schoolName);
            window.sessionStorage.setItem('schoolId', res.data.data.schoolId);
+            this.$store.commit('changeName',res.data.data.userName);
+            this.$store.commit('changeSchool',res.data.data.schoolName)
             this.$router.push('/first');
             this.$message.success('登录成功')
          } else {

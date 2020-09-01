@@ -1,17 +1,18 @@
 <template>
    <el-container class="home-container">
-      <el-aside style="width: 200px;">
+      <el-aside :width="isCollapse ? '64px': '200px'" >
          <el-menu
-                 :default-active="this.$route.path"
-                 class="el-menu-vertical-demo"
-                 background-color="#333744"
-                text-color="#fff"
-                active-text-color="#409eff"
-                style="height:100%"
-                 router
+         :default-active="this.$route.path"
+         class="el-menu-vertical-demo"
+         background-color="#333744"
+         text-color="#fff"
+         active-text-color="#409eff"
+         router
+         :unique-opened="true"
+         :collapse="isCollapse"
+         :collapse-transition="false"
                >
-                 <h3>后台系统后台</h3>
-
+                 <div class="toggle-button" @click="toggleCollapse"> |||</div>
                  <el-menu-item index="/first">
                    <i class="el-icon-star-on"></i>
                    <span slot="title">首页</span>
@@ -52,16 +53,17 @@
 <script>
   import axios from 'axios'
   export default {
-    // created() {
-    //    this.getMenuList();
-    // },
     data() {
       return {
+        isCollapse: false,
         menuList: [],
         activeIndex: '/home'
       }
     },
     methods: {
+      toggleCollapse() {
+        this.isCollapse = !this.isCollapse;
+      },
       getMenuList() {
         //获取所都菜单
             let listparam = new FormData();
@@ -91,5 +93,16 @@
   }
 </script>
 
-<style>
+<style lang="stylus">
+  .el-aside
+   height:100vh
+  .el-menu
+    border-right:none
+    height: 100%
+    .toggle-button
+      line-height: 30px
+      height: 30px
+      color: #fff
+      text-align:center
+
 </style>
