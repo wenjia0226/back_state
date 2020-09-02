@@ -12,7 +12,11 @@
          </el-col>
        </el-row>
        <analasis ref="analysis"></analasis>
-       <level ref="level"></level>
+       <el-row>
+         <el-col :span="20" :offset="2">
+            <level ref="level"></level>
+         </el-col>
+       </el-row>
      </el-card>
   </div>
 </template>
@@ -65,11 +69,11 @@
      watch: {
        newYear(val) {
          this.curYear = val;
-
+         this.createdGetInfo();
+         this.getLevelInfo();
        },
        newSemester(val) {
          this.curSemester = val;
-
          this.createdGetInfo();
          this.getLevelInfo();
        }

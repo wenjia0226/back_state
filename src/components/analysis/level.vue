@@ -2,14 +2,13 @@
   <div>
      <div class="title_total">视力分级统计</div>
      <el-row>
-       <el-col :span="20">
+       <el-col :span="20" :offset="2">
          <div ref="badTotal" style="width:100%;height:400px; margin: 0 auto"></div>
        </el-col>
      </el-row>
 
   </div>
 </template>
-
 <script>
  import echarts from 'echarts'
  import axios from 'axios'
@@ -30,6 +29,18 @@
       this.drawLine()
     },
     methods: {
+      openFullScreen() {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
+      },
       drawLine(good, light, middle, serious) {
         var myChart = echarts.init(this.$refs.badTotal);
           this.option ={
@@ -108,6 +119,7 @@
           myChart.setOption(this.option)
       },
       getBadTotal(year, semester) {
+        this.openFullScreen()
         let param = new FormData();
         param.append('year', year);
         param.append('semester', semester);
@@ -117,16 +129,24 @@
           url: '/lightspace/school/recordVisionGrade'
         }).then(this.handlegetBadTotalSucc.bind(this)).catch((err) => {
            console.log(err)
+           this.closeFullScreen(this.openFullScreen())
          })
       },
       handlegetBadTotalSucc(res) {
        // console.log(res)
-        if(res.data.status == 200) {
+        this.closeFullScreen(this.openFullScreen())
+        if(res.data.data) {
           this.good = res.data.data[0];
           this.light = res.data.data[1];
           this.middle = res.data.data[2];
           this.serious = res.data.data[3];
           this.drawLine(this.good, this.light, this.middle, this.serious)
+        }else {
+          this.good = [];
+          this.light = [];
+          this.middle = [];
+          this.serious = [];
+          this.drawLine(this.good, this.light, this.middle, this.serious);
         }
       }
     }

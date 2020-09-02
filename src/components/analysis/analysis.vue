@@ -4,6 +4,7 @@
           :data="tableData"
           style="width: 100%;margin-bottom: 20px;"
           row-key="name"
+          :header-cell-style="{background:'#eff4fb'}"
           border
           :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
          <el-table-column align="left" width="40">
@@ -27,8 +28,8 @@
         <div class="title_total">不良人数</div>
         <el-row>
           <!-- 实力分级统计 -->
-          <el-col :span="20">
-            <div ref="badTotal" style="width:100%;height:400px; margin: 0 auto"></div>
+          <el-col :span="20" :offset="2">
+            <div ref="badTotal" style="width:100%;height:400px;"></div>
           </el-col>
         </el-row>
        <!-- 年级 -->
@@ -37,18 +38,27 @@
           width="80%"
           :before-close="handleBeforeClose"
          >
-          <div class="inner_title">{{name}}账号{{grade}}年级视力统计({{nowYear}}{{nowSemester}}学期)</div>
-          <div class="second_title">单位{{name}}账号{{grade}}年级</div>
+         <el-row>
+           <el-col>
+              <el-button type="primary"  @click="handleConfirm">返回</el-button>
+           </el-col>
+         </el-row>
+          <div class="inner_title" v-if="!classData.length">{{name}}账号{{grade}}年级视力统计({{nowYear}}{{changeSem}})</div>
+          <div class="inner_title" v-if="classData.length">{{name}}账号{{gradeClass}}视力统计({{nowYear}}{{changeSem}})</div>
+           <div class="second_title" v-if="!classData.length">单位:{{name}}账号{{grade}}年级视力统计({{nowYear}}{{changeSem}})</div>
+          <div class="second_title"  v-if="classData.length">单位:{{name}}账号{{gradeClass}}视力统计({{nowYear}}{{changeSem}})</div>
           <div class="innerbox">
             <div class="inner_item" style="padding: 0 10px 0 0">应测：{{gradeSum}}人</div>
             <div class="inner_item">实测：{{gradeTested}}人</div>
             <div class="inner_item">视力不良：{{gradeBad}}人</div>
           </div>
           <h6 class="badpercent">不良率: {{gradePercentage}}</h6>
-          <div class="detail_title">详细数据</div>
+          <div class="detail_title"  v-if="!classData.length" >详细数据</div>
+          <div class="detail_title"  v-if="classData.length" >数据总览</div>
           <div v-for="(item1, index1) in this.classList" :key="item1.id" v-if="!classData.length" >
             <div class="detail_title">{{grade}}年级{{item1.name}}</div>
-            <el-table :data="item1.viewGradeReportVO" border style="width: 100%">
+            <el-table :data="item1.viewGradeReportVO" border style="width: 100%"
+           :header-cell-style="{background:'#eff4fb'}">
               <el-table-column prop="name" > </el-table-column>
               <el-table-column prop="all" label="检查人数" width="180"> </el-table-column>
               <el-table-column  prop="good" label="好视力" width="180"></el-table-column>
@@ -59,7 +69,8 @@
             </el-table>
            </div>
 
-            <el-table :data="classData" border style="width: 100%" v-if="classData.length">
+            <el-table :data="classData" border style="width: 100%"
+               :header-cell-style="{background:'#eff4fb'}" v-if="classData.length">
                <el-table-column prop="name" > </el-table-column>
                <el-table-column prop="all" label="检查人数" width="180"> </el-table-column>
                <el-table-column  prop="good" label="好视力" width="180"></el-table-column>
@@ -68,12 +79,17 @@
                <el-table-column prop="serious" label="重度不良"> </el-table-column>
                <el-table-column prop="percentage"label="不良率"></el-table-column>
              </el-table>
+             <div class="detail_title"  v-if="classData.length" >详细数据</div>
+             <el-table  :data="studentList" border style="width: 100%"
+                :header-cell-style="{background:'#eff4fb'}"  v-if="classData.length">
+                <el-table-column type="index"></el-table-column>
+                <el-table-column prop="name" label="姓名"> </el-table-column>
+                <el-table-column prop="gender" label="性别" width="180"> </el-table-column>
+                <el-table-column  prop="visionLeftStr" label="左眼视力" width="180"></el-table-column>
+                <el-table-column prop="visionRightStr" label="右眼视力"></el-table-column>
+              </el-table>
 
-          <span slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="handleConfirm">确 定</el-button>
-          </span>
         </el-dialog>
-
   </div>
 </template>
 <script>
@@ -92,6 +108,7 @@
         grade: '',
         year: '',
         semester: '',
+        changeSem: '',
         user: '',
         gradeSum: 0,
         gradeTested: 0,
@@ -100,7 +117,9 @@
         classList: {},
         classId: '',
         classData: [],
-        studentList: []
+        studentList: [],
+         loading: true,
+         gradeClass: ''
 
       }
     },
@@ -129,19 +148,17 @@
       }
     },
     methods: {
-        tableRowClassName({row, rowIndex}) {
-        if (rowIndex === 1) {
-          return 'warning-row';
-        } else if (rowIndex === 3) {
-          return 'success-row';
-        }
-        return '';
-      },
       handleBeforeClose() {
         this.dialogVisible = false;
+        this.grade = '';
+        this.classId = '';
+        this.classData = [];
       },
       handleConfirm() {
-         this.dialogVisible = false;
+        this.dialogVisible = false;
+        this.grade = '';
+        this.classId = '';
+        this.classData = [];
       },
       handleReport(row) {
         if(row.classId) {
@@ -150,7 +167,29 @@
           this.grade = row.name;
         }
         this.dialogVisible = true;
+        if(this.semester == 1) {
+          this.changeSem = '上学期'
+        }else if(this.semester == 2) {
+          this.changeSem = '下学期'
+        }else if(this.semester == 3) {
+          this.changeSem ='寒假'
+        }else if(this.semester == 0) {
+          this.changeSem = '暑假'
+        }
         this.getDetailList();
+      },
+      //加载转圈
+      openFullScreen() {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
       },
       getDetailList(){
         let url ="";
@@ -164,17 +203,20 @@
         }
         param.append('year', this.year);
         param.append('semester', this.semester);
+        this.openFullScreen();
         axios({
           method: 'post',
           data: param,
           url: url
         }).then(this.handlegetTotalSucc.bind(this)).catch((err) => {
+          this.closeFullScreen(this.openFullScreen())
            console.log(err)
          })
       },
       handlegetTotalSucc(res) {
-        if(res.data.status == 200) {
-            res? res=res.data.data: '';
+         this.closeFullScreen(this.openFullScreen())
+        if(res.data.data) {
+            res? res = res.data.data: '';
             this.gradeSum = res.gradeSum;
             this.gradeTested = res.gradeTested;
             this.gradeBad = res.gradeBad;
@@ -182,10 +224,20 @@
 
             if(this.classId) {
               this.classData = res.viewGradeReport
+              this.studentList = res.studentList
+              this.gradeClass = res.name
+              this.studentList.forEach((item, index) => {
+                if(item.gender == 1) {
+                  item.gender = '女'
+                }else {
+                  item.gender = '男'
+                }
+              })
             }else {
               this.classList = res.classList
             }
-
+          }else {
+            this.$message.error('暂无数据')
           }
       },
        // liebiao
@@ -193,19 +245,29 @@
         let param = new URLSearchParams();
           param.append('year', year);
           param.append('semester', semester);
+          this.openFullScreen();
           axios({
               method: 'post',
               url: '/lightspace/school/recordSurvey',
               data: param,
           }).then(this.handleGetDataListSucc.bind(this)).catch((err) => {
              console.log(err)
+               this.closeFullScreen(this.openFullScreen())
            })
       },
       handleGetDataListSucc(res) {
-        console.log(res)
-         this.tableData = res.data.data.recordSurvey;
-         this.yData = res.data.data.gradeMyopiaList;
-         this.drawLine(this.yData)
+         this.closeFullScreen(this.openFullScreen())
+        if(res.data.data) {
+          this.tableData = res.data.data.recordSurvey;
+          this.yData = res.data.data.gradeMyopiaList;
+          this.drawLine(this.yData)
+        }else {
+          this.$message.error('暂无数据')
+          this.tableData = [];
+          this.yData = [];
+          this.drawLine(this.yData)
+        }
+
       },
       // 不良人数图
       drawLine(yData) {
@@ -309,7 +371,8 @@
    font-size: 20px;
    font-weight: bold;
    text-align: center;
-   color: #000
+   color: #000;
+   margin: 10px 0
   .second_title
     font-size: 16px
   .innerbox
