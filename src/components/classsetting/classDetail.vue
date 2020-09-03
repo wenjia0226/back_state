@@ -1,74 +1,173 @@
 <template>
   <div>
-        <el-table
-          :data="tableData"
-          style="width: 100%;margin-bottom: 20px;"
-          row-key="id"
-          border
+        <!-- <el-table :data="tableData" style="width: 100%;margin-bottom: 20px;"row-key="id"border
           :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-          <el-table-column
-           align="center"
-            prop="date"
-            label="日期"
-            width="180">
+          <el-table-column align="center" prop="date" label="日期">
           </el-table-column>
-          <el-table-column
-           align="center"
-            prop="name"
-            label="姓名"
-            width="180">
-          </el-table-column>
-          <el-table-column
-           align="center"
-            prop="address"
-            label="地址">
-          </el-table-column>
-        </el-table>
+          <el-table-column align="center" prop="name" label="姓名"></el-table-column>
+          <el-table-column align="center" prop="address"label="地址"></el-table-column>
+        </el-table> -->
+
+         <el-table
+            @row-click="clickTable"
+            :data="gradeList"
+            ref="refTable"
+            stripe
+            style="width: 100%">
+            <el-table-column type="expand">
+              <template slot-scope="props">
+                <el-row>
+                  <el-col :span="16":offset="8">
+                    <el-table  border :data="props.row.children" stripe :show-header="status">
+                       <el-table-column align="center" prop="classNumber"></el-table-column>
+                       <el-table-column  align="center" label="操作">
+                         <template slot-scope="scope" >
+                            <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editClass(scope.row.id)"></el-button>
+                            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteClass(scope.row.id)"></el-button>
+                         </template>
+                       </el-table-column>
+                    </el-table>
+                    <div class="addClass" >
+                      <el-input v-model.number="input"  width="300px" placeholder="添加班级" @input="handleInput" padding="0"></el-input>
+                      <el-button type="primary" size="middle" icon="el-icon-check" @click="saveNewClass"></el-button>
+                      <el-button type="info" size="middle" icon="el-icon-close" @click="resetInput"></el-button>
+                    </div>
+                  </el-col>
+                </el-row>
+              </template>
+            </el-table-column>
+            <el-table-column  label="年级"  align="center"  prop="name"></el-table-column>
+            <el-table-column  label="班级个数"  align="center" prop="number"></el-table-column>
+            <el-table-column  align="center" label="操作">
+              <template slot-scope="scope">
+                 <el-button type="success" size="middle" @click="handleAddClass(scope.row.name)">新增班级</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
   </div>
 </template>
-
 <script>
+  import axios from 'axios'
   export default {
     name: 'classdetail',
+    created() {
+      this.getGradeList()
+    },
     data() {
       return {
-        tableData: [ {
-                 id: 3,
-                 date: '2016-05-01',
-                 name: '王小虎',
-                 address: '上海市普陀区金沙江路 1519 弄',
-                 children: [{
-                     id: 31,
-                     date: '2016-05-01',
-                     name: '王小虎',
-                     address: '上海市普陀区金沙江路 1519 弄'
-                   }, {
-                     id: 32,
-                     date: '2016-05-01',
-                     name: '王小虎',
-                     address: '上海市普陀区金沙江路 1519 弄'
-                 }]
-               }]
+         gradeList: [],
+         status: false,
+         input: 0,
+         nowGrade: '',
+         currentRow: {},
+         expands: [],
+         showAdd: false
       }
     },
     methods: {
-       showInput() {
-        this.inputVisible = true;
-        this.$nextTick(_ => {
-          this.$refs.saveTagInput.$refs.input.focus();
-        });
+      editClass(id) {
+         console.log(id)
+      },
+      async deleteClass(id) {
+        const confirmResult = await this.$confirm('此操作将永久删除该班级 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+        }).catch(err => err)
+        if(confirmResult !== 'confirm') {
+            return this.$message.info('已经取消删除')
+        }
+        let param = new FormData();
+        param.append('id', id)
+        axios({
+            method: 'post',
+            url: '/lightspace/school/deleteClass',
+            data: param
+        }).then(this.handleDeleteClssSucc.bind(this))
+        .catch((err) => {
+          console.log(err)
+        })
+      },
+      handleDeleteClssSucc(res) {
+        if(res.data.status == 200) {
+          this.$message.success('删除班级成功')
+          this.getGradeList()
+        }
+      },
+      toggleRowExpansion(row){
+        this.expands = [];
+        this.expands.push(row.name);
+      },
+      handleInput(val) {
+        this.input = val
+      },
+      resetInput(){
+        this.input = 0
+      },
+      handleAddClass(grade) {
+        this.showAdd = true;
+        this.grade = grade;
+      },
+      saveNewClass(row) {
+        let param = new FormData();
+        if(!this.grade) {
+          return this.$message.warning('请先选择新建班级')
+        }
+        param.append('grade', this.nowGrade);
+        param.append('classNumber', this.input);
+          axios({
+            method: 'post',
+            data: param,
+            url: '/lightspace/school/addClass'
+          }).then(this.handleAddClassSucc.bind(this)).catch((err) => {
+            console.log(err)
+          })
+
+
+      },
+      handleAddClassSucc(res) {
+        console.log(res)
+        if(res.data.status == 200) {
+          this.$message.success('添加班级成功')
+           if(res.data.data) {
+             this.gradeList = res.data.data;
+             this.input = '';
+           }
+        }else if (res.data.status == 10207) {
+             this.$message.error(res.data.msg)
+           }
+      },
+       clickTable(row,index,e){
+          this.nowGrade = row.name;
+          this.currentRow = row;
+          this.$refs.refTable.toggleRowExpansion(row)
+        },
+
+      getGradeList() {
+        let param = new FormData();
+        axios({
+          method: 'post',
+          url: '/lightspace/school/classList'
+        }).then(this.handleGetGradeListSucc.bind(this)).catch((err) => {
+          console.log(err)
+        })
+      },
+      handleGetGradeListSucc(res) {
+        if(res.data.data) {
+          this.gradeList = res.data.data
+          //this.$refs.refTable.toggleRowExpansion(row)
+        }
       }
     }
   }
 </script>
 
 <style lang="stylus" scoped>
-  .bgbottom
-     bottom: 1px solid #eee !important
-    .el-tag
-      margin: 7px
-    .secondItem
-      heihgt: 30px
-      line-height: 1.875rem
-
+  >>>.el-table__expanded-cell
+    padding:  0
+  .addClass
+     display: flex
+     margin: 10px 0
+  >>>.el-input
+    width: 200px
 </style>

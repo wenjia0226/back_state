@@ -25,7 +25,11 @@
           </el-table-column>
         </el-table>
       <!--    <report  :dialogVisible="dialogVisible" :grade="grade" @closepop="handleClosePop"></report> -->
-        <div class="title_total">不良人数</div>
+
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane label="近视人数" name="number"></el-tab-pane>
+          <el-tab-pane label="平均视力" name="average"></el-tab-pane>
+        </el-tabs>
         <el-row>
           <!-- 实力分级统计 -->
           <el-col :span="20" :offset="2">
@@ -68,7 +72,6 @@
               <el-table-column prop="percentage"label="不良率"></el-table-column>
             </el-table>
            </div>
-
             <el-table :data="classData" border style="width: 100%"
                :header-cell-style="{background:'#eff4fb'}" v-if="classData.length">
                <el-table-column prop="name" > </el-table-column>
@@ -88,7 +91,6 @@
                 <el-table-column  prop="visionLeftStr" label="左眼视力" width="180"></el-table-column>
                 <el-table-column prop="visionRightStr" label="右眼视力"></el-table-column>
               </el-table>
-
         </el-dialog>
   </div>
 </template>
@@ -118,8 +120,10 @@
         classId: '',
         classData: [],
         studentList: [],
-         loading: true,
-         gradeClass: ''
+        loading: true,
+        gradeClass: '',
+        gradeAvgList: [],
+        activeName: 'number'
 
       }
     },
@@ -148,6 +152,14 @@
       }
     },
     methods: {
+      handleClick(tab, event) {
+          this.activeName = tab.name;
+          if(this.activeName == 'number') {
+            this.drawLine(this.yData)
+          }else if(this.activeName == 'average') {
+            this.drawAverage(this.gradeAvgList)
+          }
+      },
       handleBeforeClose() {
         this.dialogVisible = false;
         this.grade = '';
@@ -221,7 +233,6 @@
             this.gradeTested = res.gradeTested;
             this.gradeBad = res.gradeBad;
             this.gradePercentage = res.gradePercentage;
-
             if(this.classId) {
               this.classData = res.viewGradeReport
               this.studentList = res.studentList
@@ -260,6 +271,7 @@
         if(res.data.data) {
           this.tableData = res.data.data.recordSurvey;
           this.yData = res.data.data.gradeMyopiaList;
+          this.gradeAvgList =res.data.data.gradeAvgList;
           this.drawLine(this.yData)
         }else {
           this.$message.error('暂无数据')
@@ -269,11 +281,11 @@
         }
 
       },
-      // 不良人数图
+      // 近视人数
       drawLine(yData) {
         var myChart = echarts.init(this.$refs.badTotal);
           this.option ={
-                    color: '#4665b0',
+                    color: '#568cd3',
                     tooltip:{
                         trigger:'axis',
                         axisPointer: {
@@ -348,6 +360,70 @@
           }
           myChart.setOption(this.option)
       },
+      //平均视力
+      drawAverage(yData) {
+        var myChart = echarts.init(this.$refs.badTotal);
+          this.option ={
+            tooltip: {
+              trigger: "axis",
+              formatter: function(params) {
+                //return (
+                  // params[0].name +
+                  // "<br/>" +
+                  // params[0].seriesName +
+                  // "：" +
+                  // params[0].data  +
+                  // "<br/>" +
+                  // params[1].seriesName +
+                  // "：" +
+                  // params[1].data
+                //);
+              }
+            },
+            // color: ['#76aafa', '#6cc280'],
+            legend:{
+                data:['本校', '全国'],
+                selectedMode:false
+            },
+            //x轴
+            xAxis:{
+              boundaryGap: false,
+              data: ["一年级", "二年级", "三年级", "四年级", "五年级", '六年级']
+            },
+
+            //y轴没有显式设置，根据值自动生成y轴
+            yAxis:{
+              min: 0.1,
+              max: 2.0,
+              interval: 0.2,
+              right: 10,
+              axisLine:{
+                  show:false,
+                  fontWeight: 'bolder'
+              },
+              axisTick:{
+                  show:false
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                    type: 'dashed',
+                    color:'#113d5e'
+                }
+            },
+            },
+            //数据-data是最终要显示的数据
+            series:[{
+                name:'本校',
+                type:'line',
+                color: '#568cd3',
+                smooth: true,
+                data: yData
+            }
+            ]
+          }
+          myChart.setOption(this.option)
+      }
 
     }
   }

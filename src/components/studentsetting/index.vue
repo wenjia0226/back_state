@@ -2,23 +2,193 @@
   <div>
      <title-header :common="common" ></title-header>
      <el-card>
-       <current-school></current-school>
+       <el-row :gutter="20">
+         <el-col :span="6">
+            <current-school></current-school>
+         </el-col>
+         <el-col :span="2" :offset="12">
+           <el-button type="success" @click="showAddDialog">新增学生</el-button>
+         </el-col>
+       </el-row>
+       <studentSearch @recordList="handleChange"></studentSearch>
+       <student-content ref="stuContent" ></student-content>
      </el-card>
+      <!-- 新增学生 -->
+    <!-- 添加学生 -->
+      <el-dialog title="添加学生" :visible.sync="addStudentVisible" width="50%" :before-close="handleClose">
+          <el-form :model="addStudentForm" :rules="addStudentRules" ref="studentFormRef" label-width="120px" >
+          <el-form-item label="所属学校班级" prop="region">
+             <el-select v-model="addStudentForm.region" placeholder="请选择"  @change="handleClassChange">
+                 <el-option
+                   v-for="item in options"
+                   :key="item.id"
+                   :label="item.className"
+                   :value="item.id">
+                 </el-option>
+               </el-select>
+          </el-form-item>
+          <el-form-item label="学生姓名" prop="name">
+              <el-input v-model="addStudentForm.name" clearable></el-input>
+           </el-form-item>
+           <el-form-item label="性别" prop="gender">
+                <el-radio v-model="addStudentForm.gender" size="medium" border :label="0">男</el-radio>
+                <el-radio v-model="addStudentForm.gender" size="medium" border :label="1">女</el-radio>
+           </el-form-item>
+           <el-form-item label ="出生日期" prop="birthday">
+              <el-date-picker
+               v-model="addStudentForm.birthday"
+               type="date"
+               @change="dateChange"
+               placeholder="选择日期">
+              </el-date-picker>
+           </el-form-item>
+           <el-form-item label="身高(米)">
+                <el-input v-model="addStudentForm.height" clearable></el-input>
+           </el-form-item>
+           <el-form-item label="体重(KG)" >
+                <el-input v-model="addStudentForm.weight" clearable></el-input>
+           </el-form-item>
+           <el-form-item label="坐姿高度(米)" >
+                <el-input v-model="addStudentForm.sittingHeight" clearable></el-input>
+           </el-form-item>
+           <el-form-item label="是否矫正" >
+                    <el-radio v-model="addStudentForm.correct" size="medium" border  :label="1">已矫正</el-radio>
+                    <el-radio v-model="addStudentForm.correct" size="medium" border :label="0">未校正</el-radio>
+           </el-form-item>
+          </el-form>
+          <span slot="footer" class="dialog-footer">
+              <el-button @click="handleClose">取 消</el-button>
+              <el-button type="primary" @click="sumitAddStudent" >确 定</el-button>
+          </span>
+      </el-dialog>
   </div>
 </template>
 
 <script>
   import titleHeader from '../../common/header'
   import  currentSchool from '../../common/currentSchool'
+  import studentSearch from './studentSearch'
+  import studentContent from './studentContent'
+  import axios from 'axios'
   export default {
+    created() {
+      this.getOptions()
+    },
     components:{
       titleHeader,
-      currentSchool
+      currentSchool,
+      studentSearch,
+      studentContent
     },
     data() {
-      return {
-        common: '学生管理'
+      var valiNumberPass1 = (rule, value, callback) => {//包含小数的数字
+       let reg = /^(([1-9]{1}\d*)|(0{1}))(\.\d{1,2})?$/g;
+       if (value === '') {
+           callback(new Error('请输入内容'));
+       } else if (!reg.test(value)) {
+           callback(new Error('请输入数字'));
+       } else {
+           callback();
+       }
       }
+      return {
+        common: '学生管理',
+        addStudentVisible: false,
+        studentInfo: [],
+        stu_cat: [],
+        addStudentForm: {
+            "sittingHeight":'',
+            "correct": '',
+            "gender":'',
+            "height":'',
+            "weight": '',
+            "name":"",
+            "birthday": '',
+             region: ''
+        },
+
+        addStudentRules: {
+            name:  { required: true, message: '请输入姓名', trigger: 'blur' },
+            birthday: {type: 'date', required: true, message: '请选择日期', trigger: 'change'},
+            correct:  { required: true, type: 'number',message: '请输入是否矫正', trigger: 'blur' },
+            gender:  { required: true,type: 'number', message: '请输入性别', trigger: 'blur' },
+            height:  { required: true, validator: valiNumberPass1, message: '请输入身高(m)', trigger: 'blur' },
+            weight:  { required: true,validator: valiNumberPass1, message: '请输入体重(kg)', trigger: 'blur' },
+            sittingHeight:  { required: true,validator: valiNumberPass1, message: '请输入坐姿高度(cm)', trigger: 'blur' },
+            region:{ required: true, message: '请选择学校班级', trigger: 'change' }
+        },
+        options: []
+      }
+    },
+    methods: {
+      handleChange(classId, name) {
+         this.$refs.stuContent.getInfo(classId, name)
+      },
+      showAddDialog() {
+        this.addStudentVisible = true;
+      },
+      handleClassChange(val) {
+        this.classId = val;
+      },
+      //孩子生日
+      dateChange(val) {
+        if(val) {
+          this.startTime = val.toString().split(",")[0]
+          this.endTime = val.toString().split(",")[1]
+          this.birthday = val.toLocaleString().split(' ') [0];
+        }
+      },
+      //关闭按钮
+      handleClose() {
+         this.addStudentVisible = false;
+         this.$refs.studentFormRef.resetFields();
+      },
+      //添加学生
+      sumitAddStudent() {
+        this.$refs.studentFormRef.validate((valid) => {
+          if(!valid) return this.$message.error('验证失败');
+          let param = new FormData();
+          param.append('classId', this.classId);
+          param.append('sittingHeight',this.addStudentForm.sittingHeight)
+          param.append('correct', this.addStudentForm.correct)
+          param.append('gender', this.addStudentForm.gender)
+          param.append('height', this.addStudentForm.height)
+          param.append('weight', this.addStudentForm.weight)
+          param.append('name', this.addStudentForm.name)
+          param.append('birthday', this.birthday);
+          axios({
+              method: 'post',
+              url: '/lightspace/school/addStudent',
+              data: param
+          }).then(this.handleAddStuSucc.bind(this)).catch((err) => {console.log(err)})
+          })
+      },
+      handleAddStuSucc(res) {
+         if(res.data.status === 10204) {
+             this.$message.error(res.data.msg);
+             this.$router.push('/login');
+         } else if(res.data.status == 200) {
+            this.addStudentVisible = false;
+            this.$message.success('添加学生信息成功');
+            this.$refs.studentFormRef.resetFields();
+            this.$refs.stuContent.getInfo();
+        }
+      },
+      getOptions() {
+       let param = new FormData();
+       axios({
+           method: 'post',
+           url: '/lightspace/school/getAllClass'
+       }).then(this.handleGetOptionsSucc.bind(this)).catch((err) => {
+          console.log(err)
+        })
+     },
+     handleGetOptionsSucc(res) {
+       //console.log(res)
+       if(res.data.status == 200) {
+         this.options = res.data.data
+       }
+     },
     }
   }
 </script>

@@ -12,11 +12,7 @@
          </el-col>
        </el-row>
        <analasis ref="analysis"></analasis>
-       <el-row>
-         <el-col :span="20" :offset="2">
-            <level ref="level"></level>
-         </el-col>
-       </el-row>
+        <level ref="level"></level>
      </el-card>
   </div>
 </template>

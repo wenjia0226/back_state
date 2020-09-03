@@ -31,9 +31,9 @@
       handleChange(classId, name) {
          this.$refs.cardmenu.getInfo(classId, name)
       },
-	  handleShow(val) {
-		  this.show = val;
-	  }
+      handleShow(val) {
+        this.show = val;
+      }
     }
   }
 </script>
