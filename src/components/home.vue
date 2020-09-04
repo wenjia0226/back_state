@@ -1,6 +1,6 @@
 <template>
    <el-container class="home-container">
-      <el-aside :width="isCollapse ? '64px': '200px'" >
+      <el-aside :width="isCollapse ? '64px': '200px'" style="min-height: 100vh" >
          <el-menu
          :default-active="this.$route.path"
          class="el-menu-vertical-demo"
@@ -10,11 +10,10 @@
          router
          :unique-opened="true"
          :collapse="isCollapse"
-         :collapse-transition="false"
-               >
+         :collapse-transition="false" >
                  <div class="toggle-button" @click="toggleCollapse"> |||</div>
                  <el-menu-item index="/first">
-                   <i class="el-icon-star-on"></i>
+                   <i class="el-icon-set-up"></i>
                    <span slot="title">首页</span>
                  </el-menu-item>
                  <el-submenu index="/studentsetting">
@@ -55,7 +54,7 @@
                        <i class="el-icon-star-on"></i>
                        <span slot="title">座位查询</span>
                      </el-menu-item>
-                   
+
                    </el-menu-item-group>
                  </el-submenu>
                </el-menu>
@@ -110,14 +109,15 @@
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" >
   .el-menu
     border-right:none
-    height: 100%
     .toggle-button
       line-height: 30px
       height: 30px
       color: #fff
       text-align:center
+  .el-menu-vertical-demo
+    min-height: 100%
 
 </style>
