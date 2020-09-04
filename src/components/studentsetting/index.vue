@@ -42,15 +42,16 @@
                placeholder="选择日期">
               </el-date-picker>
            </el-form-item>
+           <el-form-item label="坐姿高度(米)" prop="sittingHeight">
+                <el-input v-model="addStudentForm.sittingHeight" clearable></el-input>
+           </el-form-item>
            <el-form-item label="身高(米)">
                 <el-input v-model="addStudentForm.height" clearable></el-input>
            </el-form-item>
            <el-form-item label="体重(KG)" >
                 <el-input v-model="addStudentForm.weight" clearable></el-input>
            </el-form-item>
-           <el-form-item label="坐姿高度(米)" >
-                <el-input v-model="addStudentForm.sittingHeight" clearable></el-input>
-           </el-form-item>
+         
            <el-form-item label="是否矫正" >
                     <el-radio v-model="addStudentForm.correct" size="medium" border  :label="1">已矫正</el-radio>
                     <el-radio v-model="addStudentForm.correct" size="medium" border :label="0">未校正</el-radio>

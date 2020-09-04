@@ -41,6 +41,23 @@
                    <i class="el-icon-medal"></i>
                    <span slot="title">数据分析</span>
                  </el-menu-item>
+                 <el-submenu index="/online">
+                   <template slot="title">
+                     <i class="el-icon-s-custom"></i>
+                     <span>智能排座</span>
+                   </template>
+                   <el-menu-item-group>
+                     <el-menu-item index="/online">
+                        <i class="el-icon-star-on"></i>
+                        <span slot="title">在线排座</span>
+                     </el-menu-item>
+                     <el-menu-item index="/seatQuery">
+                       <i class="el-icon-star-on"></i>
+                       <span slot="title">座位查询</span>
+                     </el-menu-item>
+                   
+                   </el-menu-item-group>
+                 </el-submenu>
                </el-menu>
       </el-aside>
       <!-- 右侧主体区 -->
@@ -94,8 +111,6 @@
 </script>
 
 <style lang="stylus">
-  .el-aside
-   height:100vh
   .el-menu
     border-right:none
     height: 100%

@@ -1,6 +1,5 @@
 export default {
   changeName(state, name) {
-    console.log(name)
     state.name = name
   },
   changeClassId(state, classId) {

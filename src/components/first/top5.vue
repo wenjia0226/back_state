@@ -41,7 +41,6 @@
         })
       },
       handlegetTop5Succ(res) {
-        //console.log(res)
         if(res.data.status == 200) {
           this.tableList = res.data.data;
         }

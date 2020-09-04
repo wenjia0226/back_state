@@ -38,7 +38,7 @@
          url: '/lightspace/school/login'
        }).then((res) => {
          if(res.data.status == 200) {
-           console.log(res)
+           // console.log(res)
            window.sessionStorage.setItem('userName', res.data.data.userName);
            window.sessionStorage.setItem('schoolName', res.data.data.schoolName);
            window.sessionStorage.setItem('schoolId', res.data.data.schoolId);
