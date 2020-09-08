@@ -5,10 +5,13 @@
        <el-row >
          <el-col :span="6" > <current-school></current-school></el-col>
          <el-col :span="6" :offset="1">
-           <year ></year>
+           <year></year>
          </el-col>
          <el-col :span="6" :offset="1">
            <semester ></semester>
+         </el-col>
+         <el-col :span="2">
+           <el-button type="success" @click="getSchoolReport"> 下载学校报表</el-button>
          </el-col>
        </el-row>
        <analasis ref="analysis"></analasis>
@@ -24,6 +27,7 @@
   import  semester from'../../common/semester'
   import  analasis from './analysis'
   import level from './level'
+  import  axios from 'axios'
   export default {
     mounted() {
       this.createdGetInfo();
@@ -40,8 +44,8 @@
     data() {
       return {
         common: '数据概览',
-        // year: '2019 - 2020',
-        // semester: 0,
+        year: '2019 - 2020',
+        semester: 0,
         curSemester: 1,
         curYear: '2020 - 2021',
       }
@@ -52,7 +56,35 @@
       },
       getLevelInfo() {
         this.$refs.level.getBadTotal(this.curYear,  this.curSemester )
-      }
+      },
+      getSchoolReport() {
+        this.loading = this.$loading({
+           lock: true,
+           text: '生成中,请耐心等候...',
+           spinner: 'el-icon-loading',
+           background: 'rgba(0, 0, 0, 0.7)'
+         });
+         let param= new FormData();
+         param.append('year',this.curYear);
+         param.append('semester', this.curSemester);
+         param.append('type', 'school');
+         axios({
+           method: 'post',
+           url: '/lightspace/school/pushReport',
+           data: param
+         }).then(this.handleGetCodeSucc.bind(this)).catch((err) => {console.log(err)})
+      },
+      handleGetCodeSucc(res) {
+         //console.log(res)
+        if(res.data.status == 200) {
+          const downloadElement = document.createElement('a'); // 创建a标签
+          downloadElement.href = 'https://www.guangliangkongjian.com/download/报表文件.docx';
+          document.body.appendChild(downloadElement);
+          downloadElement.click();
+          document.body.removeChild(downloadElement);
+          this.loading.close();
+        }
+      },
     },
      computed: {
        newYear() {

@@ -32,7 +32,7 @@ export default new Router({
          {path: '/analysis', component: Analysis},
          {path: '/online', component: Online},
          {path: '/detailSeat', component: detailSeat},
-         {path: '/seatQuery', component: seatQuery}
+         {path: '/seatQuery', component: seatQuery},
        ]
      }
   ]

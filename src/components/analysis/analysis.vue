@@ -43,8 +43,12 @@
           :before-close="handleBeforeClose"
          >
          <el-row>
-           <el-col>
+           <el-col :span="2" >
               <el-button type="primary"  @click="handleConfirm">返回</el-button>
+           </el-col>
+           <el-col :span="2" :offset='18'>
+             <el-button type="success" @click="getGradeReport" v-if="!classData.length">下载年级报表</el-button>
+              <el-button type="success" @click="getGradeReport" v-if="classData.length">下载班级报表</el-button>
            </el-col>
          </el-row>
           <div class="inner_title" v-if="!classData.length">{{name}}账号{{grade}}年级视力统计({{nowYear}}{{changeSem}})</div>
@@ -151,7 +155,44 @@
         this.semester = val
       }
     },
+
     methods: {
+      getGradeReport() {
+       this.loading = this.$loading({
+            lock: true,
+            text: '生成中,请耐心等候...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          let param= new FormData();
+          if(this.grade && !this.classId) {
+            param.append('year',this.nowYear);
+            param.append('semester', this.nowSemester);
+            param.append('type', 'grade');
+            param.append('grade', this.grade);
+          }else if(this.classId) {
+            param.append('year',this.nowYear);
+            param.append('semester', this.nowSemester);
+            param.append('type', 'class');
+            param.append('class', this.classId);
+          }
+          axios({
+            method: 'post',
+            url: '/lightspace/school/pushReport',
+            data: param
+          }).then(this.handleGetCodeSucc.bind(this)).catch((err) => {console.log(err)})
+       },
+       handleGetCodeSucc(res) {
+          // console.log(res)
+         if(res.data.status == 200) {
+           const downloadElement = document.createElement('a'); // 创建a标签
+           downloadElement.href = 'https://www.guangliangkongjian.com/download/报表文件.docx';
+           document.body.appendChild(downloadElement);
+           downloadElement.click();
+           document.body.removeChild(downloadElement);
+           this.loading.close();
+         }
+       },
       handleClick(tab, event) {
           this.activeName = tab.name;
           if(this.activeName == 'number') {
@@ -178,7 +219,6 @@
         }else {
           this.grade = row.name;
         }
-        this.dialogVisible = true;
         if(this.semester == 1) {
           this.changeSem = '上学期'
         }else if(this.semester == 2) {
@@ -228,6 +268,7 @@
       handlegetTotalSucc(res) {
          this.closeFullScreen(this.openFullScreen())
         if(res.data.data) {
+            this.dialogVisible = true;
             res? res = res.data.data: '';
             this.gradeSum = res.gradeSum;
             this.gradeTested = res.gradeTested;

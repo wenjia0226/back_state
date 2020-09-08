@@ -54,9 +54,28 @@
                        <i class="el-icon-star-on"></i>
                        <span slot="title">座位查询</span>
                      </el-menu-item>
-
                    </el-menu-item-group>
                  </el-submenu>
+                <!-- <el-submenu index="/schoolreport">
+                   <template slot="title">
+                     <i class="el-icon-s-custom"></i>
+                     <span>生成报表</span>
+                   </template>
+                   <el-menu-item-group>
+                     <el-menu-item index="/schoolReport">
+                        <i class="el-icon-star-on"></i>
+                        <span slot="title">学校报表</span>
+                     </el-menu-item>
+                     <el-menu-item index="/gradeReport">
+                       <i class="el-icon-star-on"></i>
+                       <span slot="title">年级报表</span>
+                     </el-menu-item>
+                     <el-menu-item index="/classReport">
+                       <i class="el-icon-star-on"></i>
+                       <span slot="title">班级报表</span>
+                     </el-menu-item>
+                   </el-menu-item-group>
+                 </el-submenu> -->
                </el-menu>
       </el-aside>
       <!-- 右侧主体区 -->

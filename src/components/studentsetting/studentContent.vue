@@ -59,7 +59,7 @@
             <el-form-item label="体重(KG)" >
                  <el-input v-model="editStudentForm.weight" clearable></el-input>
             </el-form-item>
-           
+
             <el-form-item label="是否矫正" >
                      <el-radio v-model="editStudentForm.correct" size="medium" border  :label="1">已矫正</el-radio>
                      <el-radio v-model="editStudentForm.correct" size="medium" border :label="0">未校正</el-radio>
@@ -147,8 +147,22 @@
         this.page = 1;
         this.getDataList()
       },
+      //加载转圈
+      openFullScreen() {
+        const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
+      },
       // 获取列表
       getDataList() {
+        this.openFullScreen()
         let param = new FormData();
           param.append('type', this.type);
           param.append('id', this.id);
@@ -162,6 +176,7 @@
       },
       handleGetDataListSucc(res) {
         // console.log(res)
+        this.closeFullScreen(this.openFullScreen())
        if(res.data.status == 200) {
          res ? res= res.data.data: '';
          this.content = res.content;
@@ -204,6 +219,7 @@
     },
       // 修改学生
       editStudent(id) {
+        this.openFullScreen()
           this.studentId =id;
           let param = new URLSearchParams();
           param.append('id', id);
@@ -215,11 +231,10 @@
       },
 
       handleEditStuSucc(res) {
-
-        console.log(res)
+       this.closeFullScreen(this.openFullScreen())
+       // console.log(res)
         if(res.data.status === 10204) {
             this.$message.error(res.data.msg);
-            this.$router.push('/login');
         } else if(res.data.status == 200) {
           this.editStudentForm = res.data.data;
           this.editStudentVisible = true;
@@ -246,7 +261,7 @@
           })
       },
       handleEditSaveSucc(res) {
-        console.log(res)
+        // console.log(res)
         if(res.data.status === 10204) {
             this.$message.error(res.data.msg);
             this.$router.push('/login');

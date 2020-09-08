@@ -9,10 +9,41 @@
          <el-col :span="2" :offset="12">
            <el-button type="success" @click="showAddDialog">新增学生</el-button>
          </el-col>
+         <el-col :span="2" >
+            <el-button type="success" @click="handdleBatch">批量导入</el-button>
+         </el-col>
        </el-row>
        <studentSearch @recordList="handleChange"></studentSearch>
        <student-content ref="stuContent" ></student-content>
      </el-card>
+     <!-- 批量导入 -->
+     <el-dialog :visible.sync="showBatchImport"  width="30%" center :before-close="handleFileClose">
+       <el-row>
+         <el-col :span="12">
+           <a class="download" href="http://www.guangliangkongjian.com/download/学生导入模板.xlsx">下载模板</a>
+           <!-- <el-button @click="DownLoadTemplate" type="primary" size="small">下载模板</el-button> -->
+         </el-col>
+         <el-col :span="12">
+           <el-upload
+             :data="pdfData"
+             class="upload-demo"
+             ref="upload"
+             action="/lightspace/school/studentExcel"
+             :before-upload="beforeUpload"
+             accept=".xlsx"
+             show-file-list
+             :on-change="changeUpload"
+             :on-success="handleSuccess"
+             :file-list="fileList"
+             multiple
+             :auto-upload="false">
+             <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+             <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+             <div slot="tip" class="el-upload__tip">只能上传.xlsx文件，且不超过500kb</div>
+           </el-upload>
+         </el-col>
+       </el-row>
+     </el-dialog>
       <!-- 新增学生 -->
     <!-- 添加学生 -->
       <el-dialog title="添加学生" :visible.sync="addStudentVisible" width="50%" :before-close="handleClose">
@@ -51,7 +82,7 @@
            <el-form-item label="体重(KG)" >
                 <el-input v-model="addStudentForm.weight" clearable></el-input>
            </el-form-item>
-         
+
            <el-form-item label="是否矫正" >
                     <el-radio v-model="addStudentForm.correct" size="medium" border  :label="1">已矫正</el-radio>
                     <el-radio v-model="addStudentForm.correct" size="medium" border :label="0">未校正</el-radio>
@@ -97,6 +128,12 @@
         addStudentVisible: false,
         studentInfo: [],
         stu_cat: [],
+        showBatchImport: false,
+        fileList: [],//此数组中存入所有提交的文档信息
+        pdfData: {
+            file: '',
+            token: ''
+        },
         addStudentForm: {
             "sittingHeight":'',
             "correct": '',
@@ -122,6 +159,71 @@
       }
     },
     methods: {
+      handdleBatch() {
+        this.showBatchImport = true;
+      },
+      changeUpload(file, fileList) {
+       if(fileList.length == 2)  {
+         this.fileList = fileList.slice(1,2);
+       }
+      },
+      //请求参数传递
+      beforeUpload(file) {
+        this.pdfData.file = file;
+        this.pdfData.token = this.token;
+       },
+       submitUpload() {
+         this.$refs.upload.submit();
+         this.showBatchImport = false;
+         this.loading = true;
+       },
+       handleSuccess(res, file, fileList) {
+          this.loading = false;
+        if(res.status == 10215) {
+          this.$message.error(res.msg);
+          this.fileList = [];
+          return;
+        }else if(res.status == 200) {
+          this.$message.success(res.msg);
+          this.fileList = [];
+        }
+       },
+      handleFileClose() {
+        this.showBatchImport = false;
+         this.$refs.upload.clearFiles();
+      },
+      // 下载模板  post 方式，现在没用
+       DownLoadTemplate() {
+         let param = new URLSearchParams();
+         param.append('token' , this.token);
+         axios({
+           method:"post",
+           data: param,
+           url:'/lightspace/downloadStudent',
+           responseType: "blob"
+         }).then(this.handleGetDownLoadSuccss.bind(this)).catch(this.hanadleGetDownLoadErr.bind(this))
+       },
+       handleGetDownLoadSuccss(res) {
+         this.download(res.data)
+       },
+       // 下载文件
+      download (data) {
+         if (!data) return;
+         let url = window.URL.createObjectURL(new Blob([data]))
+         let link = document.createElement('a')
+         link.style.display = 'none'
+         link.href = url
+         link.setAttribute('download', '数据检查导入模板.xlsx')
+         document.body.appendChild(link);
+         link.click()
+        },
+       hanadleGetDownLoadErr(err) {
+         console.log(err)
+       },
+       handleFileClose() {
+         this.showDialog = false;
+          this.$refs.upload.clearFiles();
+       },
       handleChange(classId, name) {
          this.$refs.stuContent.getInfo(classId, name)
       },

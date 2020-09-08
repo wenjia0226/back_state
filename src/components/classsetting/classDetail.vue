@@ -65,6 +65,19 @@
       }
     },
     methods: {
+      //加载转圈
+      openFullScreen() {
+        const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
+      },
       editClass(id) {
          console.log(id)
       },
@@ -126,7 +139,7 @@
 
       },
       handleAddClassSucc(res) {
-        console.log(res)
+        //console.log(res)
         if(res.data.status == 200) {
           this.$message.success('添加班级成功')
            if(res.data.data) {
@@ -144,6 +157,7 @@
         },
 
       getGradeList() {
+        this.openFullScreen()
         let param = new FormData();
         axios({
           method: 'post',
@@ -153,6 +167,7 @@
         })
       },
       handleGetGradeListSucc(res) {
+        this.closeFullScreen(this.openFullScreen())
         if(res.data.data) {
           this.gradeList = res.data.data
           //this.$refs.refTable.toggleRowExpansion(row)
@@ -161,7 +176,6 @@
     }
   }
 </script>
-
 <style lang="stylus" scoped>
   >>>.el-table__expanded-cell
     padding:  0
