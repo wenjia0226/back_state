@@ -174,7 +174,7 @@
             param.append('year',this.nowYear);
             param.append('semester', this.nowSemester);
             param.append('type', 'class');
-            param.append('class', this.classId);
+            param.append('classId', this.classId);
           }
           axios({
             method: 'post',
