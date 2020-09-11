@@ -1,7 +1,7 @@
 <template>
   <div>
-    <title-header :common="common" ></title-header>
-    <first-base ></first-base>
+    <title-header :common="common"></title-header>
+    <first-base></first-base>
     <top5></top5>
     <bad-total></bad-total> <!-- 不良率统计 -->
     <level-record></level-record>   <!-- 视力分级 -->

@@ -28,7 +28,7 @@
                        </el-table-column>
                     </el-table>
                     <div class="addClass" >
-                      <el-input v-model.number="input"  width="300px" placeholder="添加班级" @input="handleInput" padding="0"></el-input>
+                      <el-input v-model="input"  width="300px" placeholder="添加班级" @input="handleInput" padding="0"></el-input>
                       <el-button type="primary" size="middle" icon="el-icon-check" @click="saveNewClass"></el-button>
                       <el-button type="info" size="middle" icon="el-icon-close" @click="resetInput"></el-button>
                     </div>
@@ -57,7 +57,7 @@
       return {
          gradeList: [],
          status: false,
-         input: 0,
+         input: '',
          nowGrade: '',
          currentRow: {},
          expands: [],
@@ -112,7 +112,13 @@
         this.expands.push(row.name);
       },
       handleInput(val) {
-        this.input = val
+        if(Number(val)) {
+           this.input = val
+        }else {
+          this.$message.error('请输入数字')
+          this.input = ''
+        }
+
       },
       resetInput(){
         this.input = 0

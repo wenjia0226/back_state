@@ -54,6 +54,8 @@
   import titleHeader from '../../common/header'
   export default {
     created() {
+      this.classId = window.sessionStorage.getItem('bindclassId');
+      this.className = window.sessionStorage.getItem('bindclassName')
       this.getOptions()
     },
     data() {
@@ -62,7 +64,8 @@
          options: [],
          value: '',
          inputName: '',
-         classId: 0,
+         classId: '',
+         className: '',
          classRecordList: [], // 班级列表
          currentPage: 1,
          pageSize: 10,
@@ -88,7 +91,19 @@
       handleGetOptionsSucc(res) {
         //console.log(res)
         if(res.data.status == 200) {
-          this.options = res.data.data
+          if(this.classId) {
+            let all = res.data.data;
+            let arr = all.filter((item, index) => {
+              if(item.id == this.classId) {
+                return item
+              }
+            })
+
+            this.options = arr
+            this.value = arr[0].className;
+          }else {
+            this.options = res.data.data;
+          }
         }
       },
       //获取座位列表

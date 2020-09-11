@@ -30,6 +30,8 @@
 
   export default{
     created() {
+      this.classId = window.sessionStorage.getItem('bindclassId');
+      this.className = window.sessionStorage.getItem('bindclassName')
       this.getOptions()
     },
     data() {
@@ -66,7 +68,20 @@
       handleGetOptionsSucc(res) {
         //console.log(res)
         if(res.data.status == 200) {
-          this.options = res.data.data
+          if(this.classId) {
+            let all = res.data.data;
+            let arr = all.filter((item, index) => {
+              if(item.id == this.classId) {
+                return item
+              }
+            })
+
+            this.options = arr
+            this.value = arr[0].className;
+            this.searchStudent()
+          }else {
+            this.options = res.data.data;
+          }
         }
       },
       searchStudent() {

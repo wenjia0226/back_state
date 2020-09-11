@@ -14,7 +14,7 @@
          </el-col>
        </el-row>
        <studentSearch @recordList="handleChange"></studentSearch>
-       <student-content ref="stuContent" ></student-content>
+       <student-content ref="stuContent"></student-content>
      </el-card>
      <!-- 批量导入 -->
      <el-dialog :visible.sync="showBatchImport"  width="30%" center :before-close="handleFileClose">
@@ -73,16 +73,15 @@
                placeholder="选择日期">
               </el-date-picker>
            </el-form-item>
-           <el-form-item label="坐姿高度(米)" prop="sittingHeight">
+           <el-form-item label="坐姿高度(厘米)" prop="sittingHeight">
                 <el-input v-model="addStudentForm.sittingHeight" clearable></el-input>
            </el-form-item>
-           <el-form-item label="身高(米)">
+           <el-form-item label="身高(厘米)" prop="height">
                 <el-input v-model="addStudentForm.height" clearable></el-input>
            </el-form-item>
            <el-form-item label="体重(KG)" >
                 <el-input v-model="addStudentForm.weight" clearable></el-input>
            </el-form-item>
-
            <el-form-item label="是否矫正" >
                     <el-radio v-model="addStudentForm.correct" size="medium" border  :label="1">已矫正</el-radio>
                     <el-radio v-model="addStudentForm.correct" size="medium" border :label="0">未校正</el-radio>
@@ -150,7 +149,7 @@
             birthday: {type: 'date', required: true, message: '请选择日期', trigger: 'change'},
             correct:  { required: true, type: 'number',message: '请输入是否矫正', trigger: 'blur' },
             gender:  { required: true,type: 'number', message: '请输入性别', trigger: 'blur' },
-            height:  { required: true, validator: valiNumberPass1, message: '请输入身高(m)', trigger: 'blur' },
+            height:  { required: true, validator: valiNumberPass1, message: '请输入身高(cm)', trigger: 'blur' },
             weight:  { required: true,validator: valiNumberPass1, message: '请输入体重(kg)', trigger: 'blur' },
             sittingHeight:  { required: true,validator: valiNumberPass1, message: '请输入坐姿高度(cm)', trigger: 'blur' },
             region:{ required: true, message: '请选择学校班级', trigger: 'change' }

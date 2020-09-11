@@ -313,6 +313,7 @@
           this.tableData = res.data.data.recordSurvey;
           this.yData = res.data.data.gradeMyopiaList;
           this.gradeAvgList =res.data.data.gradeAvgList;
+          console.log(this.gradeAvgList)
           this.drawLine(this.yData)
         }else {
           this.$message.error('暂无数据')
@@ -346,7 +347,7 @@
                           type: 'value',
                           min: 0,
 
-                          interval: 20,
+                          interval: 300,
                           show: true,
                           axisLabel: {
                              formatter: '{value}'
@@ -360,27 +361,6 @@
                       type: 'bar',
                       data: yData,
                       barWidth : 30,//柱图宽度
-
-                      // markLine:{
-                      //  data: [{yAxis: 38}],
-                      //   itemStyle: {
-                      //     normal: {
-                      //       borderWidth: 1,
-                      //       lineStyle: {
-                      //         type: 'dash',
-                      //         color: 'red',
-                      //         width: 2
-                      //       },
-                      //       label: {
-                      //         formatter: '全国小学近视率38%',
-                      //         textStyle: {
-                      //           fontSize: 12,
-                      //           fontWeight: 'bolder'
-                      //         }
-                      //       }
-                      //     }
-                      //   }
-                      // },
                       itemStyle: {
                         normal: {
                           label: {
@@ -513,4 +493,54 @@
     .el-table .success-row {
       background: #f0f9eb;
     }
+.el-tree /deep/ .el-tree-node__expand-icon.expanded
+{
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+}
+.tree .el-tree-node__expand-icon.expanded {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+.tree .el-icon-caret-right:before {
+  content: "\E602";
+  font-size: 18px;
+}
+.tree .el-tree-node__expand-icon.expanded.el-icon-caret-right:before {
+  content: "\E63c";
+  font-size: 18px;
+}
+// //有子节点 且未展开
+// .el-table/deep/ .el-icon-arrow-right:before {
+//   background: url('../../assets/image/close.png') no-repeat 0 3px;
+//   content: '';
+//   display: block;
+//   width: 16px;
+//   height: 16px;
+//   font-size: 16px;
+//   background-size: 16px;
+// }
+// //有子节点 且已展开
+//   .el-table/deep/ .el-table__expand-icon--expanded {
+//   .el-icon-arrow-right:before {
+//     background: url('../../assets/image/open.png') no-repeat 0 3px;
+//     content: '';
+//     display: block;
+//     width: 15px;
+//     height: 20px;
+//     font-size: 18px;
+//     background-size: 21px;
+//   }
+// }
+// //没有子节点
+// .el-tree /deep/.el-tree-node__expand-icon.is-leaf::before
+// .el-table/deep/.el-table__placeholder::before {
+//   background: url('../../assets/image/open.png') no-repeat 0 3px;
+//   content: '';
+//   display: block;
+//   width: 16px;
+//   height: 18px;
+//   font-size: 16px;
+//   background-size: 16px;
+// }
 </style>

@@ -12,6 +12,14 @@ import Online from '@/components/online/index'
 import detailSeat from '@/components/detailSeat/index.vue'
 import seatQuery from '@/components/seatQuery/index.vue'
 import onlineSeat from '@/components/onlineSeat/index.vue'
+import top5MoreDetail from '@/components/top5MoreDetail/index.vue'
+import teacher from '@/components/teacher/index.vue'
+import code from '@/components/code/index.vue'
+import eyedown from '@/components/eyedown/index'
+import nocheck from '@/components/nocheck/index'
+import noclock from '@/components/noclock/index'
+import nocheckPersent from '@/components/nocheckPersent.vue'
+import allBadPersent from '@/components/allBadPersent.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -20,6 +28,9 @@ export default new Router({
      {path: '/login',component: Login},
      {path: '/detailSeat/',component: detailSeat},
 	   {path: '/onlineSeat/',component: onlineSeat},
+     {path: '/top5MoreDetail', component: top5MoreDetail},
+     {path: '/nocheckPersent', component: nocheckPersent},
+     {path: '/allBadPersent', component: allBadPersent},
      {
        path: '/home',
        component: Home,
@@ -33,6 +44,11 @@ export default new Router({
          {path: '/online', component: Online},
          {path: '/detailSeat', component: detailSeat},
          {path: '/seatQuery', component: seatQuery},
+         {path: '/teacher', component: teacher},
+         {path: '/code', component: code},
+         {path: '/eyedown', component: eyedown},
+         {path: '/nocheck', component: nocheck},
+         {path: '/noclock', component: noclock},
        ]
      }
   ]

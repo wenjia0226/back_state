@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-row class="searchBox" :gutter="20" v-if="show">
+      <el-col :span="5"> <current-school></current-school></el-col>
       <el-col :span="2"><div class="name">姓名</div></el-col>
       <el-col :span="4">
         <el-input v-model="inputName" @input ="handleInputName" placeholder="姓名"></el-input>
@@ -27,9 +28,11 @@
 </template>
 <script>
   import axios from 'axios'
-
+ import  currentSchool from './currentSchool'
   export default{
     created() {
+      this.classId = window.sessionStorage.getItem('bindclassId');
+      this.className = window.sessionStorage.getItem('bindclassName')
       this.getOptions()
     },
     data() {
@@ -37,14 +40,18 @@
         options: [],
         value: '',
         inputName: '',
-        classId: 0,
+        classId: '',
+        className: '',
         show: true
       }
+    },
+    components:{
+      currentSchool
     },
     methods: {
       handleReset() {
         this.inputName = '';
-        this.classId  =  0;
+        this.classId  =  '';
         this.value = '';
         this.$emit('recordList', this.classId, this.inputName)
       },
@@ -64,9 +71,21 @@
          })
       },
       handleGetOptionsSucc(res) {
-        //console.log(res)
         if(res.data.status == 200) {
-          this.options = res.data.data
+          if(this.classId) {
+            let all = res.data.data;
+            let arr = all.filter((item, index) => {
+              if(item.id == this.classId) {
+                return item
+              }
+            })
+
+            this.options = arr
+            this.value = arr[0].className;
+            this.searchStudent()
+          }else {
+            this.options = res.data.data;
+          }
         }
       },
       searchStudent() {

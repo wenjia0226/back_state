@@ -23,7 +23,7 @@
         :total="this.totalElements">
      </el-pagination>
      <!-- 修改学生 -->
-       <el-dialog title="添加学生" :visible.sync="editStudentVisible" width="50%" :before-close="handleClose">
+       <el-dialog title="修改学生" :visible.sync="editStudentVisible" width="50%" :before-close="handleClose">
            <el-form :model="editStudentForm" :rules="editStudentRules" ref="studentFormRef" label-width="120px" >
            <el-form-item label="所属学校班级" prop="classesId">
               <el-select v-model="editStudentForm.classesId" placeholder="请选择"  @change="handleClassChange">
@@ -50,10 +50,10 @@
                 placeholder="选择日期">
                </el-date-picker>
             </el-form-item>
-            <el-form-item label="坐姿高度(米)"  prop="sittingHeight">
+            <el-form-item label="坐姿高度(厘米)"  prop="sittingHeight">
                  <el-input v-model="editStudentForm.sittingHeight" clearable></el-input>
             </el-form-item>
-            <el-form-item label="身高(米)">
+            <el-form-item label="身高(厘米)" prop="height">
                  <el-input v-model="editStudentForm.height" clearable></el-input>
             </el-form-item>
             <el-form-item label="体重(KG)" >

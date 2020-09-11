@@ -51,6 +51,7 @@
     },
     methods: {
       drawLine(name, value, title) {
+        let that = this;
         var myChart = echarts.init(this.$refs.totalleft)
         if(name == '未筛查率') {
           var myChart = echarts.init(this.$refs.totalleft)
@@ -106,6 +107,19 @@
                    }]
               }
         myChart.setOption(this.option)
+         myChart.on('click', function(param) {
+           if(param.name =="未筛查率") {
+             let routeUrl = that.$router.resolve({
+               path: '/nocheckPersent'
+              });
+              window.open(routeUrl.href, '_blank')
+           }else if(param.name == "总不良率") {
+             let routeUrl = that.$router.resolve({
+               path: '/allBadPersent'
+              });
+              window.open(routeUrl.href, '_blank')
+           }
+         })
       },
       getBase() {
         let param = new FormData();

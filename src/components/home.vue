@@ -26,12 +26,20 @@
                        <i class="el-icon-star-on"></i>
                        <span slot="title">学生管理</span>
                      </el-menu-item>
-                     <el-menu-item index="/classsetting">
+                     <el-menu-item index="/classsetting" v-if="this.role !== 'teacher'">
                        <i class="el-icon-star-on"></i>
                        <span slot="title">班级管理</span>
                     </el-menu-item>
+                    <el-menu-item index="/code">
+                       <i class="el-icon-c-scale-to-original"></i>
+                       <span slot="title">二维码下载</span>
+                    </el-menu-item>
                    </el-menu-item-group>
                  </el-submenu>
+                 <el-menu-item index="/teacher" v-if="this.role !== 'teacher'">
+                   <i class="el-icon-s-check"></i>
+                   <span slot="title">教师管理</span>
+                 </el-menu-item>
                  <el-menu-item index="/recordsetting">
                    <i class="el-icon-document"></i>
                    <span slot="title">档案管理</span>
@@ -56,26 +64,26 @@
                      </el-menu-item>
                    </el-menu-item-group>
                  </el-submenu>
-                <!-- <el-submenu index="/schoolreport">
+                 <el-submenu index="/online" v-if="this.role == 'teacher'">
                    <template slot="title">
                      <i class="el-icon-s-custom"></i>
-                     <span>生成报表</span>
+                     <span>教师提醒</span>
                    </template>
                    <el-menu-item-group>
-                     <el-menu-item index="/schoolReport">
-                        <i class="el-icon-star-on"></i>
-                        <span slot="title">学校报表</span>
+                     <el-menu-item index="/nocheck">
+                        <i class="el-icon-view"></i>
+                        <span slot="title">未检测</span>
                      </el-menu-item>
-                     <el-menu-item index="/gradeReport">
+                     <el-menu-item index="/eyedown">
                        <i class="el-icon-star-on"></i>
-                       <span slot="title">年级报表</span>
+                       <span slot="title">视力下降</span>
                      </el-menu-item>
-                     <el-menu-item index="/classReport">
-                       <i class="el-icon-star-on"></i>
-                       <span slot="title">班级报表</span>
+                     <el-menu-item index="/noclock">
+                       <i class="el-icon-bell"></i>
+                       <span slot="title">未打卡</span>
                      </el-menu-item>
                    </el-menu-item-group>
-                 </el-submenu> -->
+                 </el-submenu>
                </el-menu>
       </el-aside>
       <!-- 右侧主体区 -->
@@ -88,11 +96,15 @@
 <script>
   import axios from 'axios'
   export default {
+	 created() {
+		 this.role = window.sessionStorage.getItem('role')
+	  },
     data() {
       return {
         isCollapse: false,
         menuList: [],
-        activeIndex: '/home'
+        activeIndex: '/home',
+		role: ''
       }
     },
     methods: {
