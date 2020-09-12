@@ -19,16 +19,16 @@
                 <el-row>
                   <el-col :span="16":offset="8">
                     <el-table  border :data="props.row.children" stripe :show-header="status">
-                       <el-table-column align="center" prop="classNumber"></el-table-column>
+                       <el-table-column align="center" prop="className"></el-table-column>
                        <el-table-column  align="center" label="操作">
                          <template slot-scope="scope" >
-                            <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editClass(scope.row.id)"></el-button>
+                          <!--  <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editClass(scope.row.id)"></el-button> -->
                             <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteClass(scope.row.id)"></el-button>
                          </template>
                        </el-table-column>
                     </el-table>
                     <div class="addClass" >
-                      <el-input v-model="input"  width="300px" placeholder="添加班级" @input="handleInput" padding="0"></el-input>
+                      <el-input v-model="input"  width="300px" placeholder="新增班级" @input="handleInput" padding="0"></el-input>
                       <el-button type="primary" size="middle" icon="el-icon-check" @click="saveNewClass"></el-button>
                       <el-button type="info" size="middle" icon="el-icon-close" @click="resetInput"></el-button>
                     </div>
@@ -115,7 +115,7 @@
         if(Number(val)) {
            this.input = val
         }else {
-          this.$message.error('请输入数字')
+          this.$message.error('请输入班级数字')
           this.input = ''
         }
 
@@ -134,6 +134,7 @@
         }
         param.append('grade', this.nowGrade);
         param.append('classNumber', this.input);
+        
           axios({
             method: 'post',
             data: param,
