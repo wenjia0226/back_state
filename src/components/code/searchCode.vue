@@ -158,7 +158,16 @@
           }).then(this.handleGetCodeSucc.bind(this)).catch((err) => {console.log(err)})
       },
       handleGetCodeSucc(res) {
+          // console.log(res)
+          if(res.data.status == 200) {
+            const downloadElement = document.createElement('a'); // 创建a标签
+            downloadElement.href = res.data.data;
+            document.body.appendChild(downloadElement);
+            downloadElement.click();
+            document.body.removeChild(downloadElement);
+            this.loading.close();
 
+          }
       }
 
     }
