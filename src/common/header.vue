@@ -25,6 +25,8 @@
 
 <script>
   import currentSchool from './currentSchool.vue'
+  import axios from 'axios'
+  
   export default {
     name: 'titleheader',
     props: {
@@ -46,7 +48,18 @@
     },
     methods: {
       logout() {
-        this.$router.push('/login')
+        let param = new FormData();
+        axios({
+            method: 'post',
+            url: '/lightspace/school/loginOut'
+        }).then(this.handleLoinOutSucc.bind(this)).catch((err) => {
+           console.log(err)
+         })
+      },
+      handleLoinOutSucc(res) {
+        if(res.data.status == 200) {
+          this.$router.push('/login')
+        }
       }
     }
   }
