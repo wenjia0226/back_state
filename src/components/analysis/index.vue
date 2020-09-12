@@ -19,7 +19,6 @@
      </el-card>
   </div>
 </template>
-
 <script>
   import titleHeader from '../../common/header'
   import  currentSchool from '../../common/currentSchool'

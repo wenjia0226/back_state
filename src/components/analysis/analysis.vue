@@ -3,13 +3,19 @@
         <el-table
           :data="tableData"
           style="width: 100%;margin-bottom: 20px;"
-          row-key="name"
+           row-key="name"
+
           :header-cell-style="{background:'#eff4fb'}"
           border
           :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
          <el-table-column align="left" width="40">
            <template slot-scope="scope"></template>
          </el-table-column>
+         <!-- <el-table-column label="操作" align="center">
+           <template slot-scope="scope">
+             <el-button size="mini" @click="expandRow(scope.row)">展开</el-button>
+           </template>
+         </el-table-column> -->
           <el-table-column align="center" prop="name"label="年级" ></el-table-column>
           <el-table-column align="center" prop="good"label="好视力" ></el-table-column>
           <el-table-column align="center" prop="mild"label="轻度不良" ></el-table-column>
@@ -127,7 +133,8 @@
         loading: true,
         gradeClass: '',
         gradeAvgList: [],
-        activeName: 'number'
+        activeName: 'number',
+        expands:[]
 
       }
     },
@@ -157,6 +164,14 @@
     },
 
     methods: {
+      // expandRow(row){
+      //     if (this.expands.indexOf(row.name) < 0) {
+      //         this.expands = [];
+      //         this.expands.push(row.name);
+      //     } else {
+      //         this.expands = [];
+      //     }
+      // },
       getGradeReport() {
        this.loading = this.$loading({
             lock: true,
@@ -313,7 +328,7 @@
           this.tableData = res.data.data.recordSurvey;
           this.yData = res.data.data.gradeMyopiaList;
           this.gradeAvgList =res.data.data.gradeAvgList;
-          console.log(this.gradeAvgList)
+          // console.log(this.gradeAvgList)
           this.drawLine(this.yData)
         }else {
           this.$message.error('暂无数据')
@@ -449,8 +464,7 @@
     }
   }
 </script>
-
-<style lang="stylus" scoped>
+<style lang="stylus" scoped >
   .bgbottom
      bottom: 1px solid #eee !important
     .el-tag
@@ -490,57 +504,22 @@
       background: oldlace;
     }
 
-    .el-table .success-row {
-      background: #f0f9eb;
-    }
-.el-tree /deep/ .el-tree-node__expand-icon.expanded
-{
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
+  .el-table .success-row {
+    background: #f0f9eb;
+  }
+ // /deep/.el-icon-arrow-right:before {
+ //   // 这是展开图标
+ //   content: "\e722";
+ //   font-size: 14px;
+ // }
+/deep/.el-table__expand-icon--expanded {
+  transform: rotate(0deg)
 }
-.tree .el-tree-node__expand-icon.expanded {
-  -webkit-transform: rotate(0deg);
-  transform: rotate(0deg);
-}
-.tree .el-icon-caret-right:before {
-  content: "\E602";
-  font-size: 18px;
-}
-.tree .el-tree-node__expand-icon.expanded.el-icon-caret-right:before {
-  content: "\E63c";
-  font-size: 18px;
-}
-// //有子节点 且未展开
-// .el-table/deep/ .el-icon-arrow-right:before {
-//   background: url('../../assets/image/close.png') no-repeat 0 3px;
-//   content: '';
-//   display: block;
-//   width: 16px;
-//   height: 16px;
-//   font-size: 16px;
-//   background-size: 16px;
-// }
-// //有子节点 且已展开
-//   .el-table/deep/ .el-table__expand-icon--expanded {
-//   .el-icon-arrow-right:before {
-//     background: url('../../assets/image/open.png') no-repeat 0 3px;
-//     content: '';
-//     display: block;
-//     width: 15px;
-//     height: 20px;
-//     font-size: 18px;
-//     background-size: 21px;
-//   }
-// }
-// //没有子节点
-// .el-tree /deep/.el-tree-node__expand-icon.is-leaf::before
-// .el-table/deep/.el-table__placeholder::before {
-//   background: url('../../assets/image/open.png') no-repeat 0 3px;
-//   content: '';
-//   display: block;
-//   width: 16px;
-//   height: 18px;
-//   font-size: 16px;
-//   background-size: 16px;
-// }
+ /deep/ .el-icon-arrow-right:before {
+     content: "\e723";
+     font-size: 14px;
+ }
+
+
+
 </style>

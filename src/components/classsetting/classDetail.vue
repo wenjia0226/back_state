@@ -190,4 +190,10 @@
      margin: 10px 0
   >>>.el-input
     width: 200px
+/deep/ .el-icon-arrow-right:before {
+     content: "\e723";
+     font-size: 14px;
+ }
+
+
 </style>
