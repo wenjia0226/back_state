@@ -46,7 +46,21 @@
       titleHeader
     },
     methods: {
+      //加载转圈
+      openFullScreen() {
+        const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
+      },
       remind() {
+         this.openFullScreen()
         let param = new FormData();
         param.append('id', this.list);
         axios({
@@ -57,12 +71,14 @@
         .catch((err) => { console.log(err)})
       },
       handleRemindNoCheckSucc(res){
+        this.closeFullScreen(this.openFullScreen())
         if(res.data.status == 200) {
           this.$message.success('恭喜您，提醒成功')
           this.getNoCheck()
         }
       },
       getNoCheck() {
+        this.openFullScreen()
         let param = new FormData();
         axios({
             method: 'post',
@@ -73,6 +89,7 @@
       },
       handleGetNoCheckSucc(res) {
         // console.log(res)
+        this.closeFullScreen(this.openFullScreen())
         if(res.data.data) {
           this.tableData = res.data.data
         }

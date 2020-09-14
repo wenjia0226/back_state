@@ -64,7 +64,7 @@
                      </el-menu-item>
                    </el-menu-item-group>
                  </el-submenu>
-                 <el-submenu index="/online" v-if="this.role == 'teacher'">
+                 <el-submenu index="/nocheck" v-if="this.role == 'teacher'">
                    <template slot="title">
                      <i class="el-icon-s-custom"></i>
                      <span>教师提醒</span>

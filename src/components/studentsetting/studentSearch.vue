@@ -40,6 +40,7 @@
         value: '',
         inputName: '',
         classId: 0,
+        className: '',
         show: true
       }
     },

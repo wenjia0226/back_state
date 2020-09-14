@@ -49,7 +49,7 @@
       <el-dialog title="添加学生" :visible.sync="addStudentVisible" width="50%" :before-close="handleClose">
           <el-form :model="addStudentForm" :rules="addStudentRules" ref="studentFormRef" label-width="120px" >
           <el-form-item label="所属学校班级" prop="region">
-             <el-select v-model="addStudentForm.region" placeholder="请选择"  @change="handleClassChange">
+             <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
                  <el-option
                    v-for="item in options"
                    :key="item.id"
@@ -103,6 +103,8 @@
   import axios from 'axios'
   export default {
     created() {
+      this.classId = window.sessionStorage.getItem('bindclassId');
+      this.className = window.sessionStorage.getItem('bindclassName')
       this.getOptions()
     },
     components:{
@@ -127,6 +129,7 @@
         addStudentVisible: false,
         studentInfo: [],
         stu_cat: [],
+        value: '',
         showBatchImport: false,
         fileList: [],//此数组中存入所有提交的文档信息
         pdfData: {
@@ -143,7 +146,7 @@
             "birthday": '',
              region: ''
         },
-
+        className: '',
         addStudentRules: {
             name:  { required: true, message: '请输入姓名', trigger: 'blur' },
             birthday: {type: 'date', required: true, message: '请选择日期', trigger: 'change'},
@@ -288,7 +291,19 @@
      handleGetOptionsSucc(res) {
        //console.log(res)
        if(res.data.status == 200) {
-         this.options = res.data.data
+        if(this.classId) {
+          let all = res.data.data;
+          let arr = all.filter((item, index) => {
+            if(item.id == this.classId) {
+              return item
+            }
+          })
+
+          this.options = arr
+          this.value = arr[0].className;
+        }else {
+          this.options = res.data.data;
+        }
        }
      },
     }
