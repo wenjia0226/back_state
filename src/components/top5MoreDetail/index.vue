@@ -26,7 +26,21 @@
       }
     },
     methods: {
+      //加载转圈
+      openFullScreen() {
+        const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0,0,0,0.7)'
+        })
+        return loading;
+      },
+      closeFullScreen(loading) {
+        loading.close()
+      },
       getAll() {
+        this.openFullScreen()
         let param = new FormData();
         param.append('type', 'all');
        axios({
@@ -36,7 +50,7 @@
            }).then(this.handleGetTopAllSucc.bind(this)).catch((err) => {console.log(err)})
       },
       handleGetTopAllSucc(res) {
-        console.log(res)
+       this.closeFullScreen(this.openFullScreen())
         if(res.data.data) {
           this.tableData = res.data.data
         }

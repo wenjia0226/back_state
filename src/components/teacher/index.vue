@@ -170,6 +170,19 @@ export default {
     titleHeader
   },
   methods: {
+    //加载转圈
+    openFullScreen() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0,0,0,0.7)'
+      })
+      return loading;
+    },
+    closeFullScreen(loading) {
+      loading.close()
+    },
     handleCurrentChange(val) {
       this.page = val;
       this.getTeacherList(val)
@@ -223,6 +236,7 @@ export default {
     },
     // 搜索
     queryTeacher() {
+      this.openFullScreen()
       if(this.query == "") {
            this.getTeacherList(1);
            this.searchTeacherList = [];
@@ -238,6 +252,7 @@ export default {
         .catch(this.handleQueryErr.bind(this))
       },
       handleQuerySucc(res) {
+        this.closeFullScreen(this.openFullScreen())
         if(res.data.status === 10204) {
             this.$message.error(res.data.msg);
             this.$router.push('/login');
@@ -263,6 +278,7 @@ export default {
      this.$refs.addteacherRef.resetFields();
     },
     getTeacherList( page) {
+      this.openFullScreen()
       let param = new URLSearchParams();
       param.append('page', page);
       axios({
@@ -272,6 +288,7 @@ export default {
       }).then(this.handleGetTeacherListSucc.bind(this)).catch(this.handleGetTeacherErr.bind(this))
     },
     handleGetTeacherListSucc(res) {
+      this.closeFullScreen(this.openFullScreen())
       if(res.data.status == 200 && res.data.data !== '') {
        res ? res= res.data.data: '';
        this.content = res.content;
@@ -283,7 +300,7 @@ export default {
     handleGetTeacherErr(err) {
       console.log(err)
     },
-   showEditDialog (id) {
+    showEditDialog (id) {
        this.editDialogVisible = true;
       let param = new URLSearchParams();
        param.append('id', id);
