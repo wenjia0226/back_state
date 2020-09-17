@@ -134,7 +134,7 @@
         }
         param.append('grade', this.nowGrade);
         param.append('classNumber', this.input);
-        
+
           axios({
             method: 'post',
             data: param,

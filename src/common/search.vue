@@ -3,11 +3,11 @@
     <el-row class="searchBox" :gutter="20" v-if="show">
       <el-col :span="2"><div class="name">姓名</div></el-col>
       <el-col :span="4">
-        <el-input v-model="inputName" @input ="handleInputName" placeholder="姓名"></el-input>
+        <el-input clearable v-model="inputName" @input ="handleInputName" placeholder="姓名"></el-input>
       </el-col>
       <el-col :span="2"> <div class="name">班级选择</div></el-col>
       <el-col :span="4">
-        <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
+        <el-select v-model="value"  clearable placeholder="请选择"  @change="handleClassChange">
             <el-option
               v-for="item in options"
               :key="item.id"

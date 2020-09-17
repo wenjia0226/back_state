@@ -84,6 +84,10 @@
                      </el-menu-item>
                    </el-menu-item-group>
                  </el-submenu>
+                 <el-menu-item index="/ranking">
+                   <i class="el-icon-document"></i>
+                   <span slot="title">排行榜</span>
+                 </el-menu-item>
                </el-menu>
       </el-aside>
       <!-- 右侧主体区 -->

@@ -6,7 +6,7 @@
         <el-row :gutter="20">
           <el-col :span="2"> <div class="name">班级选择</div></el-col>
           <el-col :span="4">
-             <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
+             <el-select v-model="value" clearable  placeholder="请选择"  @change="handleClassChange">
                  <el-option
                    v-for="item in options"
                    :key="item.id"

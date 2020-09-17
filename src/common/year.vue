@@ -2,7 +2,7 @@
   <div class="schoolBox">
    <div class="schoolNow">学年</div>
    <div class="gradeNow">
-     <el-select v-model="year" placeholder="请选择" >
+     <el-select v-model="year"  clearable placeholder="请选择" >
         <el-option
           v-for="item in options"
           :key="item.year"

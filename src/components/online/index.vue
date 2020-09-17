@@ -8,7 +8,7 @@
             <div class="name">班级选择</div>
          </el-col>
           <el-col :span="4">
-             <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
+             <el-select clearable v-model="value" placeholder="请选择"  @change="handleClassChange">
                  <el-option
                    v-for="item in options"
                    :key="item.id"
@@ -21,7 +21,7 @@
              <div class="name">列数选择：</div>
          </el-col>
          <el-col :span="2" >
-           <el-select v-model="column" placeholder="请选择"   clearable>
+           <el-select clearable v-model="column" placeholder="请选择"   clearable>
              <el-option v-for="item in typeoptions" :key="item.value"   :label="item.label"  :value="item.value" >
              </el-option>
            </el-select>

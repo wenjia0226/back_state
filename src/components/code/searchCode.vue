@@ -4,7 +4,7 @@
       <el-col :span="5"> <current-school></current-school></el-col>
       <el-col :span="2"> <div class="name">班级选择</div></el-col>
       <el-col :span="4">
-        <el-select v-model="value" placeholder="请选择"  @change="handleClassChange">
+        <el-select v-model="value" clearable  placeholder="请选择"  @change="handleClassChange">
             <el-option
               v-for="item in options"
               :key="item.id"
@@ -18,6 +18,7 @@
       </el-col>
       <el-col :span="4">
         <el-autocomplete
+        clearable
           class="inline-input"
           v-model="studentName"
           :fetch-suggestions="querySearch"

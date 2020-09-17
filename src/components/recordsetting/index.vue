@@ -21,7 +21,7 @@
       // created() {
       //   this.classId = window.sessionStorage.getItem('bindclassId');
       //   this.className = window.sessionStorage.getItem('bindclassName')
-      
+
       // },
     data() {
       return {

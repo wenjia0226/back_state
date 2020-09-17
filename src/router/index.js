@@ -20,6 +20,7 @@ import nocheck from '@/components/nocheck/index'
 import noclock from '@/components/noclock/index'
 import nocheckPersent from '@/components/nocheckPersent.vue'
 import allBadPersent from '@/components/allBadPersent.vue'
+import ranking from '@/components/ranking/index.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -49,6 +50,7 @@ export default new Router({
          {path: '/eyedown', component: eyedown},
          {path: '/nocheck', component: nocheck},
          {path: '/noclock', component: noclock},
+         {path: '/ranking', component: ranking}
        ]
      }
   ]
