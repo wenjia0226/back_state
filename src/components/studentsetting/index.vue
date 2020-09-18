@@ -17,7 +17,7 @@
        <student-content ref="stuContent"></student-content>
      </el-card>
      <!-- 批量导入 -->
-     <el-dialog :visible.sync="showBatchImport"  width="30%" center :before-close="handleFileClose">
+     <el-dialog :visible.sync="showBatchImport" ref="upload" width="30%" center :before-close="handleFileClose">
        <el-row>
          <el-col :span="12">
            <a class="download" href="http://www.guangliangkongjian.com/download/学生导入模板.xlsx">下载模板</a>
@@ -161,6 +161,10 @@
       }
     },
     methods: {
+      handleFileClose() {
+        this.showBatchImport = false;
+         this.$refs.upload.clearFiles();
+      },
       handdleBatch() {
         this.showBatchImport = true;
       },
@@ -190,10 +194,6 @@
           this.fileList = [];
         }
        },
-      handleFileClose() {
-        this.showBatchImport = false;
-         this.$refs.upload.clearFiles();
-      },
       // 下载模板  post 方式，现在没用
        DownLoadTemplate() {
          let param = new URLSearchParams();
@@ -221,10 +221,6 @@
         },
        hanadleGetDownLoadErr(err) {
          console.log(err)
-       },
-       handleFileClose() {
-         this.showDialog = false;
-          this.$refs.upload.clearFiles();
        },
       handleChange(classId, name) {
          this.$refs.stuContent.getInfo(classId, name)

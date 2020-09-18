@@ -1,6 +1,6 @@
 <template>
   <div>
-    <title-header :common="common"></title-header>
+    <title-header  :common="common"></title-header>
     <first-base></first-base>
     <top5></top5>
     <bad-total></bad-total> <!-- 不良率统计 -->
