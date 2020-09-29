@@ -1,49 +1,41 @@
 <template>
   <div>
-        <!-- <el-table :data="tableData" style="width: 100%;margin-bottom: 20px;"row-key="id"border
-          :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
-          <el-table-column align="center" prop="date" label="日期">
-          </el-table-column>
-          <el-table-column align="center" prop="name" label="姓名"></el-table-column>
-          <el-table-column align="center" prop="address"label="地址"></el-table-column>
-        </el-table> -->
-
-         <el-table
-            @row-click="clickTable"
-            :data="gradeList"
-            ref="refTable"
-            stripe
-            style="width: 100%">
-            <el-table-column type="expand">
-              <template slot-scope="props">
-                <el-row>
-                  <el-col :span="16":offset="8">
-                    <el-table  border :data="props.row.children" stripe :show-header="status">
-                       <el-table-column align="center" prop="className"></el-table-column>
-                       <el-table-column  align="center" label="操作">
-                         <template slot-scope="scope" >
-                          <!--  <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editClass(scope.row.id)"></el-button> -->
-                            <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteClass(scope.row.id)"></el-button>
-                         </template>
-                       </el-table-column>
-                    </el-table>
-                    <div class="addClass" >
-                      <el-input v-model="input"  width="300px" placeholder="新增班级" @input="handleInput" padding="0"></el-input>
-                      <el-button type="primary" size="middle" icon="el-icon-check" @click="saveNewClass"></el-button>
-                      <el-button type="info" size="middle" icon="el-icon-close" @click="resetInput"></el-button>
-                    </div>
-                  </el-col>
-                </el-row>
-              </template>
-            </el-table-column>
-            <el-table-column  label="年级"  align="center"  prop="name"></el-table-column>
-            <el-table-column  label="班级个数"  align="center" prop="number"></el-table-column>
-            <el-table-column  align="center" label="操作">
-              <template slot-scope="scope">
-                 <el-button type="success" size="middle" @click="handleAddClass(scope.row.name)">新增班级</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
+   <el-table
+      @row-click="clickTable"
+      :data="gradeList"
+      ref="refTable"
+      stripe
+      style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-row>
+            <el-col :span="16":offset="8">
+              <el-table  border :data="props.row.children" stripe :show-header="status">
+                 <el-table-column align="center" prop="className"></el-table-column>
+                 <el-table-column  align="center" label="操作">
+                   <template slot-scope="scope" >
+                    <!--  <el-button type="primary" size="mini" icon="el-icon-edit" circle @click="editClass(scope.row.id)"></el-button> -->
+                      <el-button type="danger" size="mini" icon="el-icon-delete" circle @click="deleteClass(scope.row.id)"></el-button>
+                   </template>
+                 </el-table-column>
+              </el-table>
+              <div class="addClass" >
+                <el-input v-model="input"  width="300px" placeholder="新增班级" @input="handleInput" padding="0"></el-input>
+                <el-button type="primary" size="middle" icon="el-icon-check" @click="saveNewClass"></el-button>
+                <el-button type="info" size="middle" icon="el-icon-close" @click="resetInput"></el-button>
+              </div>
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
+      <el-table-column  label="年级"  align="center"  prop="name"></el-table-column>
+      <el-table-column  label="班级个数"  align="center" prop="number"></el-table-column>
+      <el-table-column  align="center" label="操作">
+        <template slot-scope="scope">
+           <el-button type="success" size="middle" @click="handleAddClass(scope.row.name)">新增班级</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
