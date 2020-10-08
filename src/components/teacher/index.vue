@@ -1,7 +1,7 @@
 <template>
   <div>
      <title-header :common="common" ></title-header>
-    <el-card>
+     <el-card v-show="!this.show">
            <el-row :gutter="20" style="margin: 10px 0 30px">
                <el-col :span="6">
                 <el-input placeholder="输入教师名称" v-model="query" clearable @clear="queryTeacher">
@@ -43,7 +43,12 @@
             :page-size ="this.size"
             :total="this.totalElements">
           </el-pagination>
-         </el-card>
+    </el-card>
+	<el-card v-show="this.show">
+		<el-row>
+			<el-col :span="24"><div class="schoolNow">请先选择学校</div></el-col>
+		</el-row>
+	</el-card>
          <!-- 添加对话框 -->
          <el-dialog title="添加教师" :visible.sync="addDialogVisible" width="50%" :before-close="handleClose">
              <el-form :model="addTeacherForm" :rules="addTeacherRules" ref="addTeacherRef" label-width="120px">
@@ -109,6 +114,7 @@ export default {
   name: 'teacher',
   data () {
     return {
+	  show: false,
       token: '',
       query: '',
       currentPage: 1,
@@ -159,12 +165,17 @@ export default {
       searchTeacherList:[],
       common: '教师管理',
       value: '',
-      options: []
+      options: [],
+	  schoolId: ''
     }
   },
   created() {
     this.getTeacherList(this.page)
     this.getOptions()
+	this.schoolId = window.sessionStorage.getItem('schoolId')
+	if(this.schoolId == -1) {
+		this.show = true
+	}
   },
   components: {
     titleHeader
@@ -413,6 +424,11 @@ export default {
 }
 
 </script>
-
-<style>
+<style lang="stylus" scoped>
+.schoolNow
+   font-size: 20px
+   font-weight: bold
+   letter-spacing :3px
+   color:#64c0ff
+   margin: 0 10px
 </style>

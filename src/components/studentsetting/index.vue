@@ -1,8 +1,8 @@
 <template>
   <div>
      <title-header :common="common" ></title-header>
-     <el-card>
-       <el-row :gutter="20">
+     <el-card v-if="!this.show">
+       <el-row :gutter="20" >
          <el-col :span="6">
             <current-school></current-school>
          </el-col>
@@ -16,6 +16,11 @@
        <studentSearch @recordList="handleChange"></studentSearch>
        <student-content ref="stuContent"></student-content>
      </el-card>
+	 <el-card v-if="this.show">
+	 	 <el-row>
+	 		 <el-col :span="24"><div class="schoolNow">请先选择学校</div></el-col>
+	 	 </el-row>
+	 </el-card>
      <!-- 批量导入 -->
      <el-dialog :visible.sync="showBatchImport" ref="upload" width="30%" center :before-close="handleFileClose">
        <el-row>
@@ -105,6 +110,10 @@
     created() {
       this.classId = window.sessionStorage.getItem('bindclassId');
       this.className = window.sessionStorage.getItem('bindclassName')
+		 this.schoolId = window.sessionStorage.getItem('schoolId');
+		if(this.schoolId == -1) {
+			this.show = true
+		}
       this.getOptions()
     },
     components:{
@@ -125,6 +134,8 @@
        }
       }
       return {
+				role: '',
+				show: false,
         common: '学生管理',
         addStudentVisible: false,
         studentInfo: [],
@@ -305,6 +316,11 @@
     }
   }
 </script>
-
-<style>
+<style lang="stylus" scoped>
+.schoolNow
+   font-size: 20px
+   font-weight: bold
+   letter-spacing :3px
+   color:#64c0ff
+   margin: 0 10px
 </style>

@@ -18,17 +18,18 @@
       search,
       card
       },
-      // created() {
-      //   this.classId = window.sessionStorage.getItem('bindclassId');
-      //   this.className = window.sessionStorage.getItem('bindclassName')
-
-      // },
     data() {
       return {
          common: '档案管理',
          show: true
       }
     },
+		created() {
+			this.schoolId = window.sessionStorage.getItem('schoolId')
+			if(this.schoolId == -1) {
+				this.show = false
+			}
+		},
     methods: {
       handleChange(classId, name) {
         this.$refs.cardmenu.getInfo(classId, name)

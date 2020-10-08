@@ -6,6 +6,7 @@
         <el-tab-pane label="戴镜视力" name="wear"></el-tab-pane>
         <el-tab-pane label="基础信息" name="base"></el-tab-pane>
         <el-tab-pane label="眼健康档案" name="eyeHealth"></el-tab-pane>
+		<el-tab-pane label="屈光度档案" name="diopter"></el-tab-pane>
       </el-tabs>
       <!-- 裸眼列表 -->
     <el-table  :header-cell-style="{background:'#eef1f6',color:'#606266'}" :data="this.content"
@@ -93,6 +94,51 @@
            :page-size ="this.size"
            :total="this.totalElements">
          </el-pagination>
+		 <!-- 屈光度列表 -->
+		  <el-table :data="this.content" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+		    border v-show="this.activeName == 'diopter' && !this.showDiopter "  stripe style="width: 100%">
+		        <el-table-column label="学校" prop="schoolName"></el-table-column>
+		        <el-table-column label="班级" prop="className"></el-table-column>
+		       <el-table-column label="学生姓名" >
+		         <template slot-scope ='scope'>
+		           <div class="student_name"  @click ="showStudentInfo( 'diopter',scope.row.studentId)">{{scope.row.studentName}}</div>
+		         </template>
+		       </el-table-column>
+		        <el-table-column label="右眼屈光度" prop="diopterRight"></el-table-column>
+		        <el-table-column label="左眼屈光度" prop="diopterLeft"></el-table-column>
+		        <el-table-column label="上传时间" prop="genTime"></el-table-column>
+		  </el-table>
+		  <el-pagination
+		     background
+		     v-show="this.activeName == 'diopter' && !this.showDiopter"
+		     :current-page="this.number"
+		     @current-change="handleCurrentChange"
+		     layout="prev, pager, next"
+		     :page-size ="this.size"
+		     :total="this.totalElements">
+		   </el-pagination>
+		<!-- 屈光度历史记录 -->
+		 <el-table :data="this.diopitercontent" v-show="this.showDiopter">
+		   <el-table-column label="班级" prop="className"></el-table-column>
+		   <el-table-column label="学生姓名" prop="studentName"></el-table-column>
+		   <el-table-column label="右眼屈光度" prop="diopterRight"></el-table-column>
+		   <el-table-column label="左眼屈光度" prop="diopterLeft"></el-table-column>
+		   <el-table-column label="上传时间" prop="genTime"></el-table-column>
+		 <el-table-column label="操作">
+		    <template slot-scope="scope">
+		        <el-button type="warning" size="middle" icon="el-icon-delete" @click="hanldeRemoveRecod('diopiter',scope.row)"  ></el-button>
+		    </template>
+		  </el-table-column>
+		 </el-table>
+		 <el-pagination
+		   background
+		   v-show="this.showHistory"
+		   :current-page="this.diopiternumber"
+		   @current-change="handleDiopiterHistoryCurrentChange"
+		   layout="prev, pager, next"
+		   :page-size ="this.diopitersize"
+		   :total="this.diopitertotalElements">
+		 </el-pagination>
    <!-- 裸眼历史记录 -->
     <el-table :data="this.stucontent" v-show="this.showHistory">
       <el-table-column label="班级" prop="className"></el-table-column>
@@ -106,15 +152,15 @@
        </template>
      </el-table-column>
     </el-table>
-    <el-pagination
-      background
-      v-show="this.showHistory"
-      :current-page="this.stunumber"
-      @current-change="handleHistoryCurrentChange"
-      layout="prev, pager, next"
-      :page-size ="this.stusize"
-      :total="this.stutotalElements">
-    </el-pagination>
+		<el-pagination
+		  background
+		  v-show="this.showHistory"
+		  :current-page="this.stunumber"
+		  @current-change="handleHistoryCurrentChange"
+		  layout="prev, pager, next"
+		  :page-size ="this.stusize"
+		  :total="this.stutotalElements">
+		</el-pagination>
     <!-- 戴镜历史记录 -->
     <el-table :data="this.wearstucontent" v-show="this.showWearHistory">
       <el-table-column label="班级" prop="className"></el-table-column>
@@ -310,7 +356,6 @@
         </table>
       </el-col>
     </el-row>
-
   </div>
 </template>
 <script>
@@ -321,7 +366,7 @@
     created() {
       this.getInfo('', '');
     },
-     data() {
+    data() {
       return {
         type: '',
         id: '',
@@ -342,6 +387,11 @@
         stusize: 5,
         stutotal:0,
         stutotalElements: 0,
+		diopitercontent: [],
+		diopitertotalElements:0,
+		diopitersize: 5,
+		diopiterpage: 1,
+		diopiternumber: 0,
         basepageSize: 10,
         basesize: 5,
         basetotal:0,
@@ -353,6 +403,7 @@
         showHistory: false,
         showWearHistory: false,
         showEyeHealth: false,
+		showDiopter: false,
         wearstucontent: [],
         wearstupageSize: 10,
         wearstusize: 5,
@@ -390,8 +441,10 @@
         this.showHistory = false;
         this.showWearHistory = false;
         this.showEyeHealth = false;
+		this.showDiopter = false;
         this.stupage = 1;
         this.wearstupage = 1;
+		this.diopiterpage = 1;
         if(tab.name == 'luo') {
           this.url = '/lightspace/school/screeningList'
         }else if(tab.name == 'wear') {
@@ -400,6 +453,8 @@
           this.url = '/lightspace/school/getStudent'
         }else if(tab.name == 'eyeHealth') {
           this.url="/lightspace/school/getAllWord"
+        }else if(tab.name == 'diopter') {
+          this.url="/lightspace/school/diopterList"
         }
         this.page = 1;
         this.getDataList();
@@ -415,6 +470,11 @@
       this.stupage = val;
       this.getSudentHistory();
     },
+	//屈光度历史分页
+	handleDiopiterHistoryCurrentChange(val) {
+	  this.diopiterpage = val;
+	  this.getDiopterHistory()
+	},
     //历史戴镜分页
     handleWearHistoryCurrentChange(val) {
       this.wearstupage = val;
@@ -455,7 +515,6 @@
         }).then(this.handleGetDataListSucc.bind(this)).catch((err) => {console.log(err)})
     },
     handleGetDataListSucc(res) {
-      //console.log(res)
 		 this.closeFullScreen(this.openFullScreen())
      if(res.data.status == 200) {
        res ? res= res.data.data: '';
@@ -489,8 +548,37 @@
         this.showEyeHealth = true;
         this.studentId  = studentId;
         this.getEyeHealth()
-      }
+      }else if(type == 'diopter') {
+		this.showDiopter = true;
+		this.studentId  = studentId;
+		this.getDiopterHistory();
+		  
+	  }
    },
+   getDiopterHistory() {
+     this.openFullScreen()
+		let param = new FormData();
+         param.append('page', this.stupage);
+         param.append('studentId', this.studentId);
+         axios({
+           method: 'post',
+           data: param,
+           url: '/lightspace/school/diopterByStudentId'
+         }).then(this.handleGetDiopterSucc.bind(this)).catch((err) => {console.log(err)})
+   },
+    handleGetDiopterSucc(res) {
+      this.closeFullScreen(this.openFullScreen())
+      if(res.data.status == 200) {
+        res ? res= res.data.data: '';
+        this.diopitercontent = res.content;
+        this.diopitertotalElements = res.totalElements;
+        this.diopitersize = res.size;
+        this.diopiternumber = res.number + 1;
+      }else {
+        this.$message.error(res.data.msg);
+        this.diopitercontent = [];
+      }
+    },
    getEyeHealth(studentId) {
      let param = new FormData();
      param.append('id', this.studentId);
@@ -565,7 +653,7 @@
      }
      myChart.setOption(this.option)
     },
-    getWearSudentHistory() {
+   getWearSudentHistory() {
       this.openFullScreen()
      let param = new FormData();
      param.append('page', this.wearstupage);
@@ -632,7 +720,9 @@
         deleurl = '/lightspace/school/deleteScreening'
       }else if(type == 'wear') {
         deleurl = '/lightspace/school/deleteScreeningWear'
-      }
+      }else if(type == 'diopiter') {
+		    deleurl = '/lightspace/school/deleteDiopter'
+	  }
        const confirmResult = await this.$confirm('此操作将永久删除该记录, 是否继续?', '提示', {
            confirmButtonText: '确定',
            cancelButtonText: '取消',
@@ -650,14 +740,15 @@
            }).then(this.handleDeleteRecordSucc.bind(this)).catch((err) => {console.log(err)})
     },
     handleDeleteRecordSucc(res) {
-     console.log(res)
       if(res.data.status == 200) {
          this.$message.success('删除成功')
          if(this.delType == 'luo') {
            this.getSudentHistory()
          }else if(this.delType == 'wear') {
            this.getWearSudentHistory()
-         }
+         }else if(this.delType == 'diopiter') {
+			this.getDiopterHistory()
+		 }
        }else {
          this.$message.error(res.data.msg);
          this.$router.push('/login');

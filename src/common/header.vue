@@ -57,9 +57,9 @@
       this.username = window.sessionStorage.getItem('userName')
       this.schoolName = window.sessionStorage.getItem('schoolName')
       this.role = window.sessionStorage.getItem('role');
-      if(this.role == 'schoolManange') {
+      if(this.role == 'schoolManange' || this.role == 'jituan' ) {
         this.getRelativeSchool()
-      }
+      } 
     },
     methods: {
       handleShoolChange(val) {
@@ -101,9 +101,12 @@
          })
       },
       handleGetRelativeSucc(res) {
-        // console.log(res)
         if(res.data.data) {
           this.options  = res.data.data;
+		  this.options.push({
+			  name: '集团',
+			  id: -1
+		  }) 
         }
       },
       logout() {

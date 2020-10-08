@@ -1,7 +1,7 @@
 <template>
   <div>
     <title-header :common="common" ></title-header>
-    <el-card>
+    <el-card v-show="!this.show">
       <div class="searchBox">
         <el-row :gutter="20">
           <el-col :span="2">
@@ -67,8 +67,12 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="classRecordList.length">
     </el-pagination>
-
     </el-card>
+		<el-card v-show = "this.show">
+			<el-row v-show="this.show">
+					<el-col :span="24"><div class="schoolNow">请先选择学校</div></el-col>
+			</el-row>
+		</el-card>
   </div>
 </template>
 
@@ -83,6 +87,8 @@
    },
     data() {
       return {
+				show: false,
+				schoolId: '',
          common: '在线排座',
          options: [],
          value: '',
@@ -126,6 +132,12 @@
     components: {
        titleHeader
     },
+	created() {
+		this.schoolId = window.sessionStorage.getItem('schoolId')
+		if(this.schoolId == -1) {
+			this.show = true
+		}
+	},
     methods: {
       handleClassChange(val) {
         this.classId = val;
@@ -237,4 +249,10 @@
       font-weight: bold
       font-size: 16px
       text-align: right
+.schoolNow
+   font-size: 20px
+   font-weight: bold
+   letter-spacing :3px
+   color:#64c0ff
+   margin: 0 10px
 </style>

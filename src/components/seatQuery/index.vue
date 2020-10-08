@@ -1,7 +1,7 @@
 <template>
   <div>
     <title-header :common="common" ></title-header>
-    <el-card>
+    <el-card v-show="!this.show">
       <div class="searchBox">
         <el-row :gutter="20">
           <el-col :span="2"> <div class="name">班级选择</div></el-col>
@@ -46,6 +46,11 @@
     </el-pagination>
 
     </el-card>
+	<el-card v-show="this.show">
+		<el-row >
+				<el-col :span="24"><div class="schoolNow">请先选择学校</div></el-col>
+		</el-row>
+	</el-card>
   </div>
 </template>
 
@@ -57,6 +62,10 @@
       this.classId = window.sessionStorage.getItem('bindclassId');
       this.className = window.sessionStorage.getItem('bindclassName')
       this.getOptions()
+			this.schoolId = window.sessionStorage.getItem('schoolId')
+			if(this.schoolId == -1) {
+				this.show = true
+			}
     },
     data() {
       return {
@@ -70,6 +79,8 @@
          currentPage: 1,
          pageSize: 10,
          total: 0,
+		 show: false,
+		 schoolId: ''
       }
     },
     components: {
@@ -131,7 +142,6 @@
          } else if(res.data.status == 200) {
             if(res.data.data.length) {
                 this.classRecordList = res.data.data;
-                console.log(this.classRecordList)
              }else {
                 this.$message({
                    message: '你好，没有查到该班级座位表，请先去排座',
@@ -173,4 +183,10 @@
       font-weight: bold
       font-size: 16px
       text-align: right
+.schoolNow
+ font-size: 20px
+ font-weight: bold
+ letter-spacing :3px
+ color:#64c0ff
+ margin: 0 10px
 </style>

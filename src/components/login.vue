@@ -39,14 +39,16 @@
          url: '/lightspace/school/login'
        }).then((res) => {
          if(res.data.status == 200) {
-            // console.log(res)
+             console.log(res)
            if(res.data.data.roleId == 2) {  // 校级管理员
              window.sessionStorage.setItem('role', 'schoolManange')
            }else if(res.data.data.roleId == 3) { // 班级管理员
              window.sessionStorage.setItem('role', 'teacher')
              window.sessionStorage.setItem('bindclassId', res.data.data.classId)
-			  window.sessionStorage.setItem('bindclassName', res.data.data.className)
-           }
+			 window.sessionStorage.setItem('bindclassName', res.data.data.className)
+           }else if(res.data.data.roleId == 0) {
+			    window.sessionStorage.setItem('role', 'jituan')
+		   }
            window.sessionStorage.setItem('userName', res.data.data.userName);
            window.sessionStorage.setItem('schoolName', res.data.data.schoolName);
            window.sessionStorage.setItem('schoolId', res.data.data.schoolId);
