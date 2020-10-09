@@ -23,18 +23,18 @@
       search,
       card
       },
-			created() {
-				this.schoolId = window.sessionStorage.getItem('schoolId')
-				if(this.schoolId == -1) {
-					this.show = true
-				}
-			},
+	created() {
+		this.schoolId = window.sessionStorage.getItem('schoolId')
+		if(this.schoolId == -1) {
+			this.show = true
+		}
+	},
     data() {
       return {
          common: '排行榜',
 		 show: false,
 		 schoolId: '',
-      }
+      }  
     },
     methods: {
       handleChange(classId) {
@@ -43,7 +43,6 @@
     }
   }
 </script>
-
 <style lang="stylus" scoped>
 .schoolNow
    font-size: 20px
