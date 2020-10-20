@@ -3,10 +3,10 @@
      <title-header :common="common" ></title-header>
      <el-card v-if="!this.show">
        <el-row :gutter="20" >
-         <el-col :span="6">
+         <el-col :span="12">
             <current-school></current-school>
          </el-col>
-         <el-col :span="2" :offset="12">
+         <el-col :span="2" :offset="6">
            <el-button type="success" @click="showAddDialog">新增学生</el-button>
          </el-col>
          <el-col :span="2" >
@@ -110,8 +110,8 @@
     created() {
       this.classId = window.sessionStorage.getItem('bindclassId');
       this.className = window.sessionStorage.getItem('bindclassName')
-		 this.schoolId = window.sessionStorage.getItem('schoolId');
-		if(this.schoolId == -1) {
+	  this.schoolId = window.sessionStorage.getItem('schoolId');
+	  if(this.schoolId == -1) {
 			this.show = true
 		}
       this.getOptions()
@@ -296,7 +296,6 @@
         })
      },
      handleGetOptionsSucc(res) {
-       //console.log(res)
        if(res.data.status == 200) {
         if(this.classId) {
           let all = res.data.data;

@@ -39,7 +39,7 @@
          url: '/lightspace/school/login'
        }).then((res) => {
          if(res.data.status == 200) {
-             console.log(res)
+             // console.log(res)
            if(res.data.data.roleId == 2) {  // 校级管理员
              window.sessionStorage.setItem('role', 'schoolManange')
            }else if(res.data.data.roleId == 3) { // 班级管理员

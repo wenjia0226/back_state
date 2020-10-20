@@ -363,9 +363,12 @@
   import echarts from 'echarts'
   export default {
     name: 'card',
-    created() {
-      this.getInfo('', '');
-    },
+	created() {
+		let role = window.sessionStorage.getItem('role');
+		if(role == 'jituan') {
+			this.getInfo('','','','')
+		}
+	},
     data() {
       return {
         type: '',
@@ -377,6 +380,8 @@
         pageSize: 10,
         size: 5,
         total:0,
+		begin: '',
+		end: '',
         totalElements: 0,
         number: 1,
         page: 1,
@@ -445,6 +450,7 @@
         this.stupage = 1;
         this.wearstupage = 1;
 		this.diopiterpage = 1;
+		this.$store.commit('changeTab', tab.name)
         if(tab.name == 'luo') {
           this.url = '/lightspace/school/screeningList'
         }else if(tab.name == 'wear') {
@@ -481,7 +487,14 @@
       this.getWearSudentHistory();
     },
     //进入判断类型
-    getInfo(classId, name) {
+    getInfo(classId, name, begin, end) {
+		if(begin && end) {
+			this.begin = begin;
+			this.end = end;
+		}else {
+			this.begin = '';
+			this.end = '';
+		}
       if(classId && !name) {  // 如果只有班级
         this.type = 'class';
         this.id = classId;
@@ -502,12 +515,19 @@
     },
     // 获取列表
     getDataList() {
-        this.openFullScreen();
-        let param = new FormData();
+		  this.openFullScreen();
+		  var b = new Date(this.begin);
+		  var begin =b.getFullYear() + '-' + (b.getMonth() + 1) + '-' + b.getDate();
+		  var e = new Date(this.end);
+		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
+		  let param = new FormData();
+		param.append('begin', this.begin);
+		param.append('end', this.end);
         param.append('type', this.type);
         param.append('id', this.id);
         param.append('page', this.page);
         param.append('name', this.name);
+			
         axios({
           method: 'post',
           data: param,
@@ -528,7 +548,7 @@
          })
        }
      }else {
-       this.$message.error(res.data.msg)
+       // this.$message.error(res.data.msg)
        this.content = [];
      }
     },

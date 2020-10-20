@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row class="searchBox" :gutter="20" v-if="show">
-      <el-col :span="6"> <current-school></current-school></el-col>
+      <el-col :span="10"> <current-school></current-school></el-col>
       <el-col :span="2"> <div class="name">班级选择</div></el-col>
       <el-col :span="4">
         <el-select v-model="value" placeholder="请选择" clearable  @change="handleClassChange">

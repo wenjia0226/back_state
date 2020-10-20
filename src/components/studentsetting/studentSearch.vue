@@ -67,7 +67,6 @@
          })
       },
       handleGetOptionsSucc(res) {
-        //console.log(res)
         if(res.data.status == 200) {
           if(this.classId) {
             let all = res.data.data;

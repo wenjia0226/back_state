@@ -21,18 +21,25 @@
     data() {
       return {
          common: '档案管理',
-         show: true
+         show: true,
+		 role: ''
       }
     },
-		created() {
-			this.schoolId = window.sessionStorage.getItem('schoolId')
-			if(this.schoolId == -1) {
-				this.show = false
-			}
-		},
+	created() {
+		this.schoolId = window.sessionStorage.getItem('schoolId')
+		if(this.schoolId == -1) {
+			this.show = false
+		}
+		this.role = window.sessionStorage.getItem('role');
+		if(this.role == 'jituan') {
+			
+		}
+		
+	},
     methods: {
-      handleChange(classId, name) {
-        this.$refs.cardmenu.getInfo(classId, name)
+      handleChange(classId, name,begin, end) {
+		console.log(1)
+        this.$refs.cardmenu.getInfo(classId, name,begin, end)
       },
       handleShow(val) {
         this.show = val;

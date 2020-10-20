@@ -1,13 +1,15 @@
 <template>
   <div>
+		<el-row>
+			<el-col :span="20"> <current-school></current-school></el-col>
+		</el-row>
     <el-row class="searchBox" :gutter="20" v-if="show">
-      <el-col :span="6"> <current-school></current-school></el-col>
       <el-col :span="2"><div class="name">姓名</div></el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <el-input v-model="inputName" clearable @input ="handleInputName" placeholder="姓名"></el-input>
       </el-col>
       <el-col :span="2"> <div class="name">班级选择</div></el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <el-select v-model="value" clearable placeholder="请选择"  @change="handleClassChange">
             <el-option
               v-for="item in options"
@@ -17,6 +19,25 @@
             </el-option>
           </el-select>
       </el-col>
+	  <el-col :span="2" class="name" v-if="showDate">
+		  时间选择
+	  </el-col>
+	  <el-col :span="4" v-if="showDate">
+		 <el-date-picker
+		        v-model="begin"
+		        type="date"
+		        placeholder="开始日期"
+		        :picker-options="pickerOptions0">
+		 </el-date-picker>
+	  </el-col>
+	  <el-col :span="4" v-if="showDate">
+		  <el-date-picker
+		         v-model="end"
+		         type="date"
+		         placeholder="结束日期"
+		         :picker-options="pickerOptions1">
+		  </el-date-picker>
+	  </el-col>
      <el-col :span="2">
        <el-button type="primary" @click="searchStudent">查询</el-button>
      </el-col>
@@ -42,18 +63,48 @@
         inputName: '',
         classId: '',
         className: '',
-        show: true
-      }
+        show: true,
+		begin: '',
+		end: '',
+		showDate: true,
+		pickerOptions0: {
+			disabledDate: (time) => {
+				return time.getTime() > Date.now() - 8.64e6;	
+			}
+		},
+		pickerOptions1: {
+			disabledDate: (time) => {
+				return (time.getTime() < new Date(this.begin).getTime()+ 1*24*60*60*1000 || time.getTime() > Date.now() - 8.64e6 );
+			}
+		},
+		}
     },
     components:{
       currentSchool
     },
+	computed: {
+		nowTab: function() {
+			return this.$store.state.tab
+		}
+	},
+	watch: {
+		nowTab: function(val) {
+			this.tab = val;
+			if(this.tab == 'diopter' || this.tab == 'eyeHealth' || this.tab =='base') {
+				this.showDate = false;
+			}else {
+				this.showDate = true;
+			}
+		}
+	},
+	
     methods: {
       handleReset() {
         this.inputName = '';
         this.classId  =  '';
         this.value = '';
-        this.$emit('recordList', this.classId, this.inputName)
+		this.begin = '';
+		this.end = '';
       },
       handleInputName(e) {
         this.inputName = e
@@ -71,6 +122,7 @@
          })
       },
       handleGetOptionsSucc(res) {
+		  // console.log(res)
         if(res.data.status == 200) {
           if(this.classId) {
             let all = res.data.data;
@@ -79,9 +131,8 @@
                 return item
               }
             })
-
-            this.options = arr
             this.value = arr[0].className;
+			
             this.searchStudent()
           }else {
             this.options = res.data.data;
@@ -89,7 +140,20 @@
         }
       },
       searchStudent() {
-          this.$emit('recordList', this.classId, this.inputName)
+		  var b = new Date(this.begin);
+			if(this.begin) {
+				var begin=b.getFullYear() + '-' + (b.getMonth() + 1) + '-' + b.getDate();
+			}else {
+				var begin = ''
+			}
+		  if(this.end) {
+				var e = new Date(this.end);
+				var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
+				   
+			}else {
+				var end = ''
+			}
+		   this.$emit('recordList', this.classId, this.inputName, begin, end)
       },
 
     }

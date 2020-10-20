@@ -83,12 +83,16 @@
    created() {
      this.classId = window.sessionStorage.getItem('bindclassId');
      this.className = window.sessionStorage.getItem('bindclassName')
-     this.getOptions()
+	 this.schoolId = window.sessionStorage.getItem('schoolId')
+	 if(this.schoolId == -1) {
+	 	this.show = true
+	 }
+	 this.getOptions()
    },
     data() {
       return {
-				show: false,
-				schoolId: '',
+		show: false,
+		schoolId: '',
          common: '在线排座',
          options: [],
          value: '',
@@ -132,12 +136,6 @@
     components: {
        titleHeader
     },
-	created() {
-		this.schoolId = window.sessionStorage.getItem('schoolId')
-		if(this.schoolId == -1) {
-			this.show = true
-		}
-	},
     methods: {
       handleClassChange(val) {
         this.classId = val;
@@ -152,6 +150,7 @@
          })
       },
       handleGetOptionsSucc(res) {
+		  
         if(res.data.status == 200) {
           if(this.classId) {
             let all = res.data.data;
@@ -160,7 +159,6 @@
                 return item
               }
             })
-
             this.options = arr
             this.value = arr[0].className;
           }else {
@@ -237,7 +235,6 @@
     }
   }
 </script>
-
 <style  lang="stylus" scoped>
   .searchBox
     height: 40px

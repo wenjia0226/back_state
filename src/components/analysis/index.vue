@@ -3,7 +3,7 @@
      <title-header :common="common" ></title-header>
      <el-card>
        <el-row >  
-         <el-col :span="6" > <current-school></current-school></el-col>
+         <el-col :span="8" > <current-school></current-school></el-col>
          <el-col :span="6" :offset="1">
            <year></year>
          </el-col>

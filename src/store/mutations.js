@@ -17,5 +17,8 @@ export default {
   },
   seeGrade(state, grade) {
     state.grade = grade
-  }
+  },
+	changeTab(state, tab) {
+		state.tab = tab
+	}
 }

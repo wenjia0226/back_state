@@ -1,33 +1,63 @@
 <template>
   <div>
     <div class="title_total">视力数据概况</div>
+	<el-row :gutter="20" style="margin: .2rem 0">
+		<el-col :span="2" class="name" >
+		  时间选择
+		</el-col>
+		<el-col :span="4" >
+		 <el-date-picker
+		        v-model="begin"
+		        type="date"
+		        placeholder="开始日期"
+		        :picker-options="pickerOptions0">
+		 </el-date-picker>
+		</el-col>
+		<el-col :span="4" >
+		  <el-date-picker
+		         v-model="end"
+		         type="date"
+		         placeholder="结束日期"
+		         :picker-options="pickerOptions1">
+		  </el-date-picker>
+		</el-col>
+		<el-col :span="2">
+		  <el-button type="primary" @click="search">查询</el-button>
+		</el-col>
+		<el-col :span="2">
+		  <el-button type="primary" @click="handleReset">重置</el-button>
+		</el-col>
+	</el-row>
     <el-row :gutter="20">
-      <el-col :span="10">
+      <el-col :span="11">
         <div class="base_total">
           <div class="base_icon"><i class="el-icon-user"></i></div>
           <div class="base_con">
             <div ><span>{{actual}}</span><span> |</span> <span>{{inspect}}</span></div>
-            <div class="base_inner"><span>实核人数</span><span> |</span> <span>应检人数</span></div>
+            <div class="base_inner" v-if="!begin"><span>实核人数</span><span> |</span> <span>应检人数</span></div>
+			 <div class="base_inner" v-if="begin"><span>此时间段内检测人数</span><span> |</span> <span>应检人数</span></div>
           </div>
         </div>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="11" >
         <div class="base_total"  style="background: #51b9ca">
             <div class="base_icon"><i class="el-icon-s-check"></i></div>
             <div class="base_con">
               <div ><span>{{bad}}</span><span> |</span> <span>{{badPercentage}}%</span></div>
-              <div class="base_inner"><span>不良总人数</span><span> |</span> <span>不良率</span></div>
+              <div class="base_inner" v-if="!begin"><span>不良总人数</span><span> |</span> <span>不良率</span></div>
+			  <div class="base_inner" v-if="begin"><span>此时间段内检测不良人数</span><span> |</span> <span>不良率</span></div>
             </div>
           </div>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
-      <el-col :span="10">
+    <el-row  :gutter="20">
+      <el-col :span="11">
         <div ref="totalleft" style="width: 400px;height:300px; margin: 0 auto"></div>
       </el-col>
-      <el-col :span="10">
+      <el-col :span="11">
         <div ref="totalRight" style="width: 400px;height:300px; margin: 0 auto"></div>
       </el-col>
+			
     </el-row>
   </div>
 </template>
@@ -46,10 +76,30 @@
         actual: '',
         notPercentage: '',
         bad:'',
-        badPercentage: ''
+        badPercentage: '',
+		begin: '',
+		end: '',
+		pickerOptions0: {
+			disabledDate: (time) => {
+				return time.getTime() > Date.now() - 8.64e6;	
+			}
+		},
+		pickerOptions1: {
+			disabledDate: (time) => {
+				return (time.getTime() < new Date(this.begin).getTime()+ 1*24*60*60*1000 || time.getTime() > Date.now() - 8.64e6 );
+			}
+		},
       }
     },
     methods: {
+		handleReset() {
+			this.begin = '';
+			this.end = '';
+			this.getBase();
+		},
+		search() {
+			this.getBase();
+		},
       drawLine(name, value, title) {
         let that = this;
         var myChart = echarts.init(this.$refs.totalleft)
@@ -122,15 +172,29 @@
          })
       },
       getBase() {
-        let param = new FormData();
+		  var b = new Date(this.begin);
+		  var begin =b.getFullYear() + '-' + (b.getMonth() + 1) + '-' + b.getDate();
+		  var e = new Date(this.end);
+		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
+      let param = new FormData();
+		if(!this.begin) {
+			var begin = '';
+			var end = ''
+		}else {
+			param.append('begin', begin);
+			param.append('end', end);
+		}
+	
        axios({
            method: 'post',
-           url: '/lightspace/school/survey'
+           url: '/lightspace/school/survey',
+		   data: param
        }).then(this.handleGetBaseSucc.bind(this)).catch((err) => {
           console.log(err)
         })
       },
       handleGetBaseSucc(res) {
+		 // console.log(res)
         if(res.data.status == 200) {
           res.data.data? res= res.data.data: ''
           this.inspect	= res.inspect;
@@ -169,4 +233,10 @@
       text-align: right
       .base_inner
         margin: 20px 0 5px
+.name
+      height: 40px
+      line-height: 40px
+      font-weight: bold
+      font-size: 16px
+      text-align: right
 </style>

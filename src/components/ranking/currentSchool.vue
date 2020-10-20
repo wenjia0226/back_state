@@ -29,23 +29,17 @@
        color:#64c0ff
        margin: 0 10px
      .schoolName
-        // border: 2px solid #eee
-        // box-shadow:0 0 3px #eee
-        // border-radius: 5px
-        // line-height: 30px
-        // height: 30px
-        // padding: 0 20px
-        background-color: #FFF;
-        background-image: none;
+        background-color: #fff
+        background-image: none
         border-radius: 4px;
-        border: 1px solid #DCDFE6;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        color: #606266;
-        display: inline-block;
-        font-size: inherit;
-        height: 40px;
-        line-height: 40px;
-        padding: 0 15px;
+        border: 1px solid #DCDFE6
+        -webkit-box-sizing: border-box
+        box-sizing: border-box
+        color: #606266
+        display: inline-block
+        font-size: inherit
+        height: 40px
+        line-height: 40px
+        padding: 0 15px
 
 </style>

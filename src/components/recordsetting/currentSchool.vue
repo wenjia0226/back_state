@@ -29,12 +29,6 @@
        color:#64c0ff
        margin: 0 10px
      .schoolName
-        // border: 2px solid #eee
-        // box-shadow:0 0 3px #eee
-        // border-radius: 5px
-        // line-height: 30px
-        // height: 30px
-        // padding: 0 20px
         background-color: #FFF;
         background-image: none;
         border-radius: 4px;
@@ -47,5 +41,4 @@
         height: 40px;
         line-height: 40px;
         padding: 0 15px;
-
 </style>
