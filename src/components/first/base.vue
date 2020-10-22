@@ -77,18 +77,18 @@
         notPercentage: '',
         bad:'',
         badPercentage: '',
-		begin: '',
-		end: '',
-		pickerOptions0: {
-			disabledDate: (time) => {
-				return time.getTime() > Date.now() - 8.64e6;	
-			}
-		},
-		pickerOptions1: {
-			disabledDate: (time) => {
-				return (time.getTime() < new Date(this.begin).getTime()+ 1*24*60*60*1000 || time.getTime() > Date.now() - 8.64e6 );
-			}
-		},
+				begin: '',
+				end: '',
+				pickerOptions0: {
+					disabledDate: (time) => {
+						return time.getTime() > Date.now() - 8.64e6;	
+					}
+				},
+				pickerOptions1: {
+					disabledDate: (time) => {
+						return (time.getTime() < new Date(this.begin).getTime()+ 1*24*60*60*1000 || time.getTime() > Date.now() - 8.64e6 );
+					}
+				},
       }
     },
     methods: {
@@ -176,7 +176,7 @@
 		  var begin =b.getFullYear() + '-' + (b.getMonth() + 1) + '-' + b.getDate();
 		  var e = new Date(this.end);
 		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
-      let param = new FormData();
+		let param = new FormData();
 		if(!this.begin) {
 			var begin = '';
 			var end = ''

@@ -380,8 +380,8 @@
         pageSize: 10,
         size: 5,
         total:0,
-		begin: '',
-		end: '',
+				begin: '',
+				end: '',
         totalElements: 0,
         number: 1,
         page: 1,
@@ -392,11 +392,11 @@
         stusize: 5,
         stutotal:0,
         stutotalElements: 0,
-		diopitercontent: [],
-		diopitertotalElements:0,
-		diopitersize: 5,
-		diopiterpage: 1,
-		diopiternumber: 0,
+				diopitercontent: [],
+				diopitertotalElements:0,
+				diopitersize: 5,
+				diopiterpage: 1,
+				diopiternumber: 0,
         basepageSize: 10,
         basesize: 5,
         basetotal:0,
@@ -408,7 +408,7 @@
         showHistory: false,
         showWearHistory: false,
         showEyeHealth: false,
-		showDiopter: false,
+		    showDiopter: false,
         wearstucontent: [],
         wearstupageSize: 10,
         wearstusize: 5,
@@ -446,11 +446,11 @@
         this.showHistory = false;
         this.showWearHistory = false;
         this.showEyeHealth = false;
-		this.showDiopter = false;
+				this.showDiopter = false;
         this.stupage = 1;
         this.wearstupage = 1;
-		this.diopiterpage = 1;
-		this.$store.commit('changeTab', tab.name)
+				this.diopiterpage = 1;
+				this.$store.commit('changeTab', tab.name)
         if(tab.name == 'luo') {
           this.url = '/lightspace/school/screeningList'
         }else if(tab.name == 'wear') {

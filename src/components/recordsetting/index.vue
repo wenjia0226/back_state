@@ -38,7 +38,6 @@
 	},
     methods: {
       handleChange(classId, name,begin, end) {
-		console.log(1)
         this.$refs.cardmenu.getInfo(classId, name,begin, end)
       },
       handleShow(val) {

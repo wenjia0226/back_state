@@ -103,8 +103,8 @@
         this.inputName = '';
         this.classId  =  '';
         this.value = '';
-		this.begin = '';
-		this.end = '';
+				this.begin = '';
+				this.end = '';
       },
       handleInputName(e) {
         this.inputName = e
