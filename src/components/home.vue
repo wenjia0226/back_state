@@ -96,7 +96,6 @@
       </el-main>
    </el-container>
 </template>
-
 <script>
   import axios from 'axios'
   export default {

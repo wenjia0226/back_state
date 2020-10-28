@@ -97,7 +97,7 @@
 		 <!-- 屈光度列表 -->
 		  <el-table :data="this.content" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
 		    border v-show="this.activeName == 'diopter' && !this.showDiopter "  stripe style="width: 100%">
-		        <el-table-column label="学校" prop="schoolName"></el-table-column>
+		       <!-- <el-table-column label="学校" prop="schoolName"></el-table-column>
 		        <el-table-column label="班级" prop="className"></el-table-column>
 		       <el-table-column label="学生姓名" >
 		         <template slot-scope ='scope'>
@@ -106,7 +106,24 @@
 		       </el-table-column>
 		        <el-table-column label="右眼屈光度" prop="diopterRight"></el-table-column>
 		        <el-table-column label="左眼屈光度" prop="diopterLeft"></el-table-column>
-		        <el-table-column label="上传时间" prop="genTime"></el-table-column>
+		        <el-table-column label="上传时间" prop="genTime"></el-table-column> -->
+						<el-table-column label="学校" prop="schoolName"></el-table-column>
+						<el-table-column label="班级" prop="className"></el-table-column>
+						<el-table-column label="学生姓名" >
+						  <template slot-scope ='scope'>
+						    <div class="student_name"  @click ="showStudentInfo( 'diopter',scope.row.studentId)">{{scope.row.studentName}}</div>
+						  </template>
+						</el-table-column>
+						<el-table-column label="右眼球镜" prop="ds1R"></el-table-column>
+						<el-table-column label="左眼球镜" prop="ds1L"></el-table-column>
+						<el-table-column label="右眼柱镜" prop="dc1R"></el-table-column>
+						<el-table-column label="左眼柱镜" prop="dc1L"></el-table-column>
+						<el-table-column label="右眼轴位" prop="axis1R"></el-table-column>
+						<el-table-column label="左眼轴位" prop="axis1L"></el-table-column>
+						<el-table-column label="右眼水平眼位" prop="ghR"></el-table-column>
+						<el-table-column label="左眼水平眼位" prop="ghR"></el-table-column>
+						<el-table-column label="右眼垂直眼位" prop="gvR"></el-table-column>
+						<el-table-column label="左眼垂直眼位" prop="gvL"></el-table-column>
 		  </el-table>
 		  <el-pagination
 		     background
@@ -121,8 +138,16 @@
 		 <el-table :data="this.diopitercontent" v-show="this.showDiopter">
 		   <el-table-column label="班级" prop="className"></el-table-column>
 		   <el-table-column label="学生姓名" prop="studentName"></el-table-column>
-		   <el-table-column label="右眼屈光度" prop="diopterRight"></el-table-column>
-		   <el-table-column label="左眼屈光度" prop="diopterLeft"></el-table-column>
+		  <el-table-column label="右眼球镜" prop="ds1R"></el-table-column>
+		  <el-table-column label="左眼球镜" prop="ds1L"></el-table-column>
+		  <el-table-column label="右眼柱镜" prop="dc1R"></el-table-column>
+		  <el-table-column label="左眼柱镜" prop="dc1L"></el-table-column>
+		  <el-table-column label="右眼轴位" prop="axis1R"></el-table-column>
+		  <el-table-column label="左眼轴位" prop="axis1L"></el-table-column>
+		  <el-table-column label="右眼水平眼位" prop="ghR"></el-table-column>
+		  <el-table-column label="左眼水平眼位" prop="ghR"></el-table-column>
+		  <el-table-column label="右眼垂直眼位" prop="gvR"></el-table-column>
+		  <el-table-column label="左眼垂直眼位" prop="gvL"></el-table-column>
 		   <el-table-column label="上传时间" prop="genTime"></el-table-column>
 		 <el-table-column label="操作">
 		    <template slot-scope="scope">
@@ -132,7 +157,7 @@
 		 </el-table>
 		 <el-pagination
 		   background
-		   v-show="this.showHistory"
+		   v-show="this.showDiopter"
 		   :current-page="this.diopiternumber"
 		   @current-change="handleDiopiterHistoryCurrentChange"
 		   layout="prev, pager, next"
@@ -365,9 +390,7 @@
     name: 'card',
 	created() {
 		let role = window.sessionStorage.getItem('role');
-		if(role == 'jituan') {
 			this.getInfo('','','','')
-		}
 	},
     data() {
       return {
