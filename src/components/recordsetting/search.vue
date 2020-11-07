@@ -44,6 +44,9 @@
      <el-col :span="2">
        <el-button type="primary" @click="handleReset">重置</el-button>
      </el-col>
+		<el-col :span="2" :offset="4" v-if=" this.tab == 'diopter' ">
+		   <el-button type="success" @click="downLoad">下载屈光度报表</el-button>
+		 </el-col>
     </el-row>
   </div>
 </template>
@@ -64,13 +67,14 @@
         classId: '',
         className: '',
         show: true,
-		begin: '',
-		end: '',
-		showDate: true,
-		pickerOptions0: {
-			disabledDate: (time) => {
-				return time.getTime() > Date.now() - 8.64e6;	
-			}
+				tab: '',
+				begin: '',
+				end: '',
+				showDate: true,
+				pickerOptions0: {
+				disabledDate: (time) => {
+					return time.getTime() > Date.now() - 8.64e6;	
+				}
 		},
 		pickerOptions1: {
 			disabledDate: (time) => {
@@ -121,6 +125,32 @@
            console.log(err)
          })
       },
+			downLoad() {
+				this.loading = this.$loading({
+					 lock: true,
+					 text: '生成中,请耐心等候...',
+					 spinner: 'el-icon-loading',
+					 background: 'rgba(0, 0, 0, 0.7)'
+				 });
+				let param = new FormData();
+				console.log(this.classId)
+				param.append('classId', this.classId);
+				axios({
+					method: 'post',
+					data: param,
+					url: '/lightspace/school/diopterExcelOut'
+				}).then(this.handleGetExcelSucc.bind(this)).catch((res) => {console.log(res)})
+			},
+			handleGetExcelSucc(res) {
+				if(res.data.status == 200) {
+					const downloadElement = document.createElement('a'); // 创建a标签
+					downloadElement.href = 'https://www.guangliangkongjian.com/lightspace/file/Members.xls';
+					document.body.appendChild(downloadElement);
+					downloadElement.click();
+					document.body.removeChild(downloadElement);
+					this.loading.close();
+				}
+			},
       handleGetOptionsSucc(res) {
 		  // console.log(res)
         if(res.data.status == 200) {
