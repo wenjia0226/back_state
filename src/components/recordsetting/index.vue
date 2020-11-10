@@ -7,7 +7,6 @@
     </el-card>
   </div>
 </template>
-
 <script>
   import titleHeader from '../../common/header'
   import search from './search'

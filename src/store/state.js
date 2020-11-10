@@ -5,5 +5,5 @@ export default {
   year: '2020 - 2021',
   classId: '',
   grade: 0,
-  tab: ''
+  tab: 'luo'
 }

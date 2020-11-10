@@ -44,7 +44,7 @@
      <el-col :span="2">
        <el-button type="primary" @click="handleReset">重置</el-button>
      </el-col>
-		<el-col :span="2" :offset="4" v-if=" this.tab == 'diopter' ">
+		<el-col :span="2" :offset="4" v-if="this.tab == 'diopter'" >
 		   <el-button type="success" @click="downLoad">下载屈光度报表</el-button>
 		 </el-col>
     </el-row>
@@ -93,15 +93,14 @@
 	},
 	watch: {
 		nowTab: function(val) {
-			this.tab = val;
-			if(this.tab == 'diopter' || this.tab == 'eyeHealth' || this.tab =='base') {
-				this.showDate = false;
-			}else {
-				this.showDate = true;
-			}
+				this.tab = val;
+				if(this.tab == 'diopter' || this.tab == 'eyeHealth' || this.tab =='base') {
+					this.showDate = false;
+				}else {
+					this.showDate = true;
+				}
 		}
 	},
-	
     methods: {
       handleReset() {
         this.inputName = '';
@@ -133,7 +132,6 @@
 					 background: 'rgba(0, 0, 0, 0.7)'
 				 });
 				let param = new FormData();
-				console.log(this.classId)
 				param.append('classId', this.classId);
 				axios({
 					method: 'post',
@@ -144,7 +142,7 @@
 			handleGetExcelSucc(res) {
 				if(res.data.status == 200) {
 					const downloadElement = document.createElement('a'); // 创建a标签
-					downloadElement.href = 'https://www.guangliangkongjian.com/lightspace/file/Members.xls';
+					downloadElement.href = 'https://www.guangliangkongjian.com/file/Members.xls';
 					document.body.appendChild(downloadElement);
 					downloadElement.click();
 					document.body.removeChild(downloadElement);

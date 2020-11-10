@@ -4,7 +4,6 @@
           :data="tableData"
           style="width: 100%;margin-bottom: 20px;"
            row-key="name"
-
           :header-cell-style="{background:'#eff4fb'}"
           border
           :tree-props="{children: 'children', hasChildren: 'hasChildren'}">

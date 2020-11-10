@@ -380,7 +380,8 @@
     name: 'card',
 	created() {
 		let role = window.sessionStorage.getItem('role');
-			this.getInfo('','','','')
+			//this.getInfo('','','','')
+			this.handleClick({name: 'luo'},)
 	},
     data() {
       return {
@@ -439,6 +440,7 @@
         studentWord: [],
       }
     },
+		
     methods: {
     //加载转圈
     openFullScreen() {
