@@ -57,7 +57,6 @@
       <el-col :span="11">
         <div ref="totalRight" style="width: 400px;height:300px; margin: 0 auto"></div>
       </el-col>
-			
     </el-row>
   </div>
 </template>
@@ -184,8 +183,9 @@
 			param.append('begin', begin);
 			param.append('end', end);
 		}
-	
-       axios({
+		 window.sessionStorage.setItem('begin', begin);
+		 window.sessionStorage.setItem('end', end);
+      axios({
            method: 'post',
            url: '/lightspace/school/survey',
 		   data: param
