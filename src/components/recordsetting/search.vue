@@ -38,7 +38,7 @@
 		         :picker-options="pickerOptions1">
 		  </el-date-picker>
 	  </el-col>
-     <el-col :span="2">
+     <el-col :span="2" >
        <el-button type="primary" @click="searchStudent">查询</el-button>
      </el-col>
      <el-col :span="2">
@@ -176,7 +176,7 @@
 			}
 		  if(this.end) {
 				var e = new Date(this.end);
-				var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
+				var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + (e.getDate() + 1);
 				   
 			}else {
 				var end = ''

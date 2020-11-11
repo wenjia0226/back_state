@@ -21,10 +21,10 @@
 		         :picker-options="pickerOptions1">
 		  </el-date-picker>
 		</el-col>
-		<el-col :span="2">
+		<el-col :span="2" :offset="2">
 		  <el-button type="primary" @click="search">查询</el-button>
 		</el-col>
-		<el-col :span="2">
+		<el-col :span="2" :offset="1">
 		  <el-button type="primary" @click="handleReset">重置</el-button>
 		</el-col>
 	</el-row>
@@ -174,7 +174,8 @@
 		  var b = new Date(this.begin);
 		  var begin =b.getFullYear() + '-' + (b.getMonth() + 1) + '-' + b.getDate();
 		  var e = new Date(this.end);
-		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
+		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + (e.getDate() + 1);
+			console.log(end)
 		let param = new FormData();
 		if(!this.begin) {
 			var begin = '';
@@ -209,7 +210,6 @@
     }
   }
 </script>
-
 <style lang="stylus" scoped>
   .title_total
     font-size: 20px;

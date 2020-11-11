@@ -4,7 +4,7 @@
       <el-col :span="24">
         <el-card shadow="always">
           <el-row class="header_wrap">
-             <el-col :span="6" >
+             <el-col :span="4" >
                <i class="el-icon-folder-opened"></i><span style="margin: 0 10px">{{common}}</span></el-col>
              <el-col :span="11" style="text-align: center">
               <div style="font-size: 20px;display: inline-block;margin: 0 10px"> {{schoolName}} </div>
@@ -19,10 +19,12 @@
                  </el-select>
               </div>
              </el-col>
-             <el-col :span="6"  style="text-align: right; margin-right: 20px">
-              <div style="display: inline-block;margin: 0 10px"> 当前用户：{{username}}</div>
-              <el-button type="primary" size="middle" @click="logout"> 退出</el-button>
+             <el-col :span="6" >
+              <div > 当前用户：{{username}}</div>
              </el-col>
+						 <el-col :span="2">
+							    <el-button type="primary" size="middle" @click="logout"> 退出</el-button>
+						 </el-col>
           </el-row>
         </el-card>
       </el-col>
