@@ -241,6 +241,7 @@
       },
       handleClassChange(val) {
         this.classId = val;
+				this.addStudentForm.region = val;
       },
       //孩子生日
       dateChange(val) {
