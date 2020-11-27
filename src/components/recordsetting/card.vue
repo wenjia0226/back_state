@@ -1,6 +1,5 @@
 <template>
   <div>
-
       <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
         <el-tab-pane label="裸眼档案" name="luo"></el-tab-pane>
         <el-tab-pane label="戴镜视力" name="wear"></el-tab-pane>
@@ -18,8 +17,16 @@
             <div class="student_name"  @click = "showStudentInfo('luo',scope.row.studentId)">{{scope.row.studentName}}</div>
           </template>
         </el-table-column>
-        <el-table-column label="右眼裸眼视力" prop="visionRight"></el-table-column>
-        <el-table-column label="左眼裸眼视力" prop="visionLeft"></el-table-column>
+       <el-table-column label="右眼裸眼视力" >
+					<template slot-scope="scope">
+						<div :style="{color: scope.row.visionRightStr >= 1.0 ? 'black': 'red', fontWeight: scope.row.visionRightStr >= 1.0 ? 'normal': 'bold',}">{{scope.row.visionRight}}</div>
+					</template>
+				</el-table-column>
+				<el-table-column label="左眼裸眼视力" >
+					<template slot-scope="scope">
+						<div :style="{color: scope.row.visionLeftStr >= 1.0 ? 'black': 'red', fontWeight: scope.row.visionLeftStr >= 1.0 ? 'normal': 'bold',}">{{scope.row.visionLeft}}</div>
+					</template>
+				</el-table-column>
         <el-table-column label="最近一次检测时间" prop="lastTime"></el-table-column>
     </el-table>
     <el-pagination
@@ -41,9 +48,17 @@
              <div class="student_name"  @click ="showStudentInfo( 'wear',scope.row.studentId)">{{scope.row.studentName}}</div>
            </template>
          </el-table-column>
-          <el-table-column label="右眼戴镜视力" prop="visionRight"></el-table-column>
-          <el-table-column label="左眼戴镜视力" prop="visionLeft"></el-table-column>
-          <el-table-column label="最近一次检测时间" prop="lastTime"></el-table-column>
+					<el-table-column label="右眼裸眼视力" >
+						<template slot-scope="scope">
+							<div :style="{color: scope.row.visionRightStr >= 1.0 ? 'black': 'red', fontWeight: scope.row.visionRightStr >= 1.0 ? 'normal': 'bold',}">{{scope.row.visionRight}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="左眼裸眼视力" >
+						<template slot-scope="scope">
+							<div :style="{color: scope.row.visionLeftStr >= 1.0 ? 'black': 'red', fontWeight: scope.row.visionLeftStr >= 1.0 ? 'normal': 'bold',}">{{scope.row.visionLeft}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column label="最近一次检测时间" prop="lastTime"></el-table-column>
     </el-table>
     <el-pagination
        background
@@ -94,7 +109,7 @@
            :page-size ="this.size"
            :total="this.totalElements">
          </el-pagination>
-		 <!-- 屈光度列表 -->
+		<!-- 屈光度列表 -->
 		  <el-table :data="this.content" :header-cell-style="{background:'#eef1f6',color:'#606266'}"
 		    border v-show="this.activeName == 'diopter' && !this.showDiopter "  stripe style="width: 100%">
 			<el-table-column label="学校" prop="schoolName"></el-table-column>
@@ -104,10 +119,28 @@
 				<div class="student_name"  @click ="showStudentInfo( 'diopter',scope.row.studentId)">{{scope.row.studentName}}</div>
 			  </template>
 			</el-table-column>
-			<el-table-column label="右眼球镜" prop="ds1R"></el-table-column>
-			<el-table-column label="左眼球镜" prop="ds1L"></el-table-column>
-			<el-table-column label="右眼柱镜" prop="dc1R"></el-table-column>
-			<el-table-column label="左眼柱镜" prop="dc1L"></el-table-column>
+			<el-table-column label="右眼球镜" >
+				<template slot-scope="scope">
+					<div :style="{color:  scope.row.dc1R && (scope.row.ds1R > 1.5 || scope.row.ds1R < -0.5 ) ? 'red': 'black',
+					fontWeight: scope.row.dc1R && (scope.row.ds1R > 1.5 || scope.row.ds1R < -0.5 ) ? 'bold': 'normal'}">{{scope.row.ds1R}}</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="左眼球镜" >
+				<template slot-scope="scope">
+					<div :style="{color:  scope.row.dc1L && (scope.row.ds1L > 1.5 || scope.row.ds1L < -0.5 ) ? 'red': 'black',
+					fontWeight: scope.row.dc1L && (scope.row.ds1L > 1.5 || scope.row.ds1L < -0.5 ) ? 'bold': 'normal'}">{{scope.row.ds1L}}</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="右眼柱镜" >
+				<template slot-scope="scope">
+					<div :style="{color: scope.row.dc1R < -1.5 ? 'red': 'black',fontWeight: scope.row.dc1R < -1.5 ? 'bold': 'normal'}">{{scope.row.dc1R}}</div>
+				</template>
+			</el-table-column>
+			<el-table-column label="左眼柱镜">
+				<template slot-scope="scope">
+					<div :style="{color: scope.row.dc1L < -1.5 ? 'red': 'black',fontWeight: scope.row.dc1L < -1.5 ? 'bold': 'normal'}">{{scope.row.dc1L}}</div>
+				</template>
+			</el-table-column>
 			<el-table-column label="右眼轴位" prop="axis1R"></el-table-column>
 			<el-table-column label="左眼轴位" prop="axis1L"></el-table-column>
 			<el-table-column label="右眼水平眼位" prop="ghR"></el-table-column>
@@ -200,10 +233,10 @@
     </el-pagination>
     <!-- 眼健康档案 -->
    <el-row style="margin: 10px auto" v-show="this.leftLuoX.length">
-     <el-col :span="16":offset="4">
-        <div ref="left" style="width: 100%;height: 400px;margin: 0 auto"></div>
-      </el-col>
-    </el-row>
+	 <el-col :span="16":offset="4">
+			<div ref="left" style="width: 100%;height: 400px;margin: 0 auto"></div>
+		</el-col>
+	</el-row>
     <el-row v-show="this.showEyeHealth">
       <el-col :span="24" style="font-size: 40px;padding: 20px;margin: 20rpx;text-align: center;">
         学生视觉检查报告单
@@ -536,8 +569,8 @@
 		  var e = new Date(this.end);
 		  var end =e.getFullYear() + '-' + (e.getMonth() + 1) + '-' + e.getDate();
 		  let param = new FormData();
-		param.append('begin', this.begin);
-		param.append('end', this.end);
+			param.append('begin', this.begin);
+			param.append('end', this.end);
         param.append('type', this.type);
         param.append('id', this.id);
         param.append('page', this.page);
@@ -552,8 +585,30 @@
     handleGetDataListSucc(res) {
 		 this.closeFullScreen(this.openFullScreen())
      if(res.data.status == 200) {
+			 //console.log(res.data.data)
        res ? res= res.data.data: '';
-       this.content = res.content;
+			 this.content = res.content;
+			  let arr = res.content;
+				// if(this.activeName="diopter") {
+				// 	let newArr =	arr.forEach((item, index) => {
+				// 		if(item.dc1L.indexOf("<") == -1) {
+				// 			let i = item.dc1L.indexOf("<") == -1;
+				// 			item = item.substring(i);
+				// 		}
+				// 	})
+				// 		console.log(newArr)
+				// }
+				if(this.activeName == 'diopter') {
+					arr.forEach((item, index) => {
+						if(item.dc1L.indexOf("<") > -1) {
+							 item.dc1L = item.dc1L.substring(1)
+						}
+						if(item.dc1R.indexOf("<") > -1) {
+							 item.dc1R = item.dc1R.substring(1)
+						}
+					})
+					 this.content = arr;
+				} 
        this.totalElements = res.totalElements;
        this.size = res.size;
        this.number = res.number + 1;
